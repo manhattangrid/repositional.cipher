@@ -111,13 +111,26 @@
   .ref-text span{color:var(--text)}
   #ref-info{font-family:var(--mono);font-size:13px;color:var(--text-2);min-height:20px;margin-top:6px}
   @media(max-width:480px){.options-grid{grid-template-columns:1fr}.rc-title{font-size:16px}.key{width:28px;height:26px;font-size:10px}}
+
+  /* ── credits ── */
+  .credits-wrap{position:fixed;bottom:20px;left:20px;z-index:100}
+  .credits-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
+  .credits-btn:hover{color:var(--text-2);border-color:var(--border-2)}
+  .credits-box{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:10px 14px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1)}
+  .credits-wrap:hover .credits-box{opacity:1;transform:translateY(0);pointer-events:auto}
+  .credits-box p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
+  .credits-box span{color:var(--text-3);display:block;font-size:10px;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+  @media(hover:none){
+    .credits-wrap:hover .credits-box{opacity:0;pointer-events:none}
+    .credits-box.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="rc-header">
     <span class="rc-title">REPOSITIONAL/CIPHER</span>
-    <span class="rc-subtitle">a manhattangrid and seanthenotcher project</span>
+    <span class="rc-subtitle">a manhattangrid project</span>
   </div>
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('encode')">ENCODE</button>
@@ -237,6 +250,15 @@
     <div class="divider"></div>
     <div style="font-size:13px;font-weight:500;color:var(--text)">Hover a key to see its cipher mapping</div>
     <div id="ref-info"></div>
+  </div>
+
+  <div class="credits-wrap">
+    <div class="credits-box" id="credits-box">
+      <span>credits</span>
+      <p>lumenhv</p>
+      <p>SeanEncrypted</p>
+    </div>
+    <button class="credits-btn" onclick="toggleCredits()">Credits</button>
   </div>
 </div>
 
@@ -552,6 +574,15 @@ function buildKeyboard(){
   });
 }
 buildKeyboard();
+
+function toggleCredits(){
+  var b=document.getElementById('credits-box');
+  b.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var w=e.target.closest('.credits-wrap');
+  if(!w)document.getElementById('credits-box').classList.remove('open');
+});
 </script>
 </body>
 </html>
