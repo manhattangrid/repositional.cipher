@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<link rel="icon" type="image/x-icon" href="repcipher.ico">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Repositional Cipher</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#fff;--bg-2:#f5f5f3;--bg-3:#ededea;
+    --text:#1a1a18;--text-2:#6b6b67;--text-3:#a0a09c;
+    --border:rgba(0,0,0,.12);--border-2:rgba(0,0,0,.22);--border-3:rgba(0,0,0,.35);
+    --teal:#1D9E75;--teal-bg:#E1F5EE;--teal-bd:#9FE1CB;
+    --amber:#BA7517;--amber-bg:#FAEEDA;--amber-bd:#FAC775;
+    --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+    --r:8px;--rl:12px
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#1a1a18;--bg-2:#242422;--bg-3:#2e2e2c;
+    --text:#f0f0ec;--text-2:#9a9a96;--text-3:#606060;
+    --border:rgba(255,255,255,.1);--border-2:rgba(255,255,255,.18);--border-3:rgba(255,255,255,.28);
+    --teal:#5DCAA5;--teal-bg:#04342C;--teal-bd:#0F6E56;
+    --amber:#EF9F27;--amber-bg:#412402;--amber-bd:#854F0B
+  }}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem 4rem}
+  .wrap{width:100%;max-width:680px}
+  .rc-header{display:flex;align-items:baseline;gap:12px;margin-bottom:2rem;padding-top:1rem}
+  .rc-title{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:-.5px}
+  .rc-subtitle{font-size:13px;color:var(--text-2)}
+  .tab-bar{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:.5px solid var(--border)}
+  .tab-btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.5px;padding:8px 18px;border:none;background:transparent;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-.5px;transition:color .15s;border-radius:0}
+  .tab-btn.active{color:var(--text);border-bottom:2px solid var(--text)}
+  .tab-btn:hover{color:var(--text)}
+  .panel{display:none}.panel.active{display:block}
+  .input-label{font-size:11px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;display:block}
+  .input-area{position:relative;margin-bottom:1rem}
+  .input-area textarea{font-family:var(--mono);font-size:15px;width:100%;min-height:80px;padding:12px 14px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg);color:var(--text);resize:vertical;outline:none;transition:border-color .15s;line-height:1.6}
+  .input-area textarea:focus{border-color:var(--border-3);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+  .option-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:.5px solid var(--border);border-radius:var(--r);cursor:pointer;user-select:none;transition:border-color .15s,background .15s;background:var(--bg)}
+  .option-row:hover{border-color:var(--border-2);background:var(--bg-2)}
+  .option-row.checked{border-color:var(--border-3)}
+  .option-info{flex:1}
+  .option-name{font-size:13px;font-weight:500;margin-bottom:1px}
+  .option-desc{font-size:11px;color:var(--text-2);line-height:1.4}
+  .checkbox-anim{width:20px;height:20px;flex-shrink:0}
+  .checkbox-anim svg{width:20px;height:20px;overflow:visible}
+  .cb-box{fill:none;stroke:var(--border-2);stroke-width:1.5;transition:stroke .2s}
+  .cb-check{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:16;stroke-dashoffset:16;transition:stroke-dashoffset .3s cubic-bezier(.4,0,.2,1),stroke .2s}
+  .checked .cb-box{stroke:var(--text)}.checked .cb-check{stroke-dashoffset:0}
+
+  /* ── ambig chip ── */
+  .ac-wrap{overflow:hidden;max-height:0;opacity:0;margin-bottom:0;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s,margin-bottom .3s}
+  .ac-wrap.visible{max-height:80px;opacity:1;margin-bottom:8px}
+  .ac{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:var(--r);border:.5px solid var(--teal-bd);background:var(--teal-bg);transition:border-color .25s,background .25s}
+  .ac.warn{border-color:var(--amber-bd);background:var(--amber-bg)}
+  .ac-left{display:flex;align-items:center;gap:8px}
+  .ac-icon{font-size:15px;color:var(--teal);transition:color .25s;flex-shrink:0}
+  .ac.warn .ac-icon{color:var(--amber)}
+  .ac-text{font-size:12px;font-weight:500;color:var(--teal);line-height:1.35;transition:color .25s}
+  .ac.warn .ac-text{color:var(--amber)}
+  .ac-sub{font-size:11px;font-weight:400;opacity:.8;display:block}
+  .yn{display:flex;align-items:center;border:.5px solid var(--teal-bd);border-radius:6px;overflow:hidden;flex-shrink:0;transition:border-color .25s}
+  .ac.warn .yn{border-color:var(--amber-bd)}
+  .yn-btn{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border:none;cursor:pointer;background:transparent;color:var(--teal);transition:background .2s,color .2s;letter-spacing:.3px}
+  .ac.warn .yn-btn{color:var(--amber)}
+  .yn-btn.active{background:var(--teal);color:var(--teal-bg)}
+  .ac.warn .yn-btn.active{background:var(--amber);color:var(--amber-bg)}
+  .yn-sep{width:.5px;background:var(--teal-bd);height:22px;flex-shrink:0;transition:background .25s}
+  .ac.warn .yn-sep{background:var(--amber-bd)}
+
+  /* ── output card ── */
+  .output-card{background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:14px 16px;min-height:52px;position:relative}
+  .output-label{font-size:11px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;color:var(--text-2);margin-bottom:8px}
+  .output-text{font-family:var(--mono);font-size:16px;word-break:break-all;min-height:22px;letter-spacing:.5px}
+  .output-steps{margin-top:10px;border-top:.5px solid var(--border);padding-top:10px}
+  .step-row{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--text-2);margin-bottom:3px;opacity:0;transform:translateY(4px);animation:stepIn .2s forwards}
+  @keyframes stepIn{to{opacity:1;transform:none}}
+
+  /* ── copy btn ── */
+  .copy-btn{position:absolute;top:10px;right:10px;width:32px;height:32px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s,transform .15s}
+  .copy-btn:hover{border-color:var(--border-3);color:var(--text)}
+  .copy-btn:active{transform:scale(.9)}
+  .copy-btn.copied{border-color:var(--teal);color:var(--teal)}
+  .cb-iw{position:relative;width:18px;height:18px;pointer-events:none}
+  .cb-iw .ic,.cb-iw .ik{position:absolute;top:0;left:0;font-size:18px;line-height:1;transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+  .cb-iw .ic{opacity:1;transform:scale(1) rotate(0deg)}
+  .cb-iw .ik{opacity:0;transform:scale(.3) rotate(-20deg);color:var(--teal)}
+  .copy-btn.copied .ic{opacity:0;transform:scale(.3) rotate(20deg)}
+  .copy-btn.copied .ik{opacity:1;transform:scale(1) rotate(0deg)}
+  .copy-toast{position:absolute;top:0;right:42px;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:5px 10px;font-size:12px;font-weight:500;white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:6px;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1);z-index:10}
+  .copy-toast.show{opacity:1;transform:translateX(0)}
+  .copy-toast-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+
+  /* ── keyboard ── */
+  .kbd-viz{margin:1rem 0 1.25rem;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .kbd-row{display:flex;gap:4px}
+  .key{font-family:var(--mono);font-size:11px;font-weight:700;width:34px;height:32px;display:flex;align-items:center;justify-content:center;border:.5px solid var(--border-2);border-radius:4px;background:var(--bg-2);color:var(--text-2);cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .15s}
+  .key:hover{background:var(--bg-3);color:var(--text)}
+  .key.hl-from{background:#04342C;color:#9FE1CB;border-color:#0F6E56;transform:scale(1.12);z-index:2}
+  .key.hl-to{background:#26215C;color:#CECBF6;border-color:#534AB7;transform:scale(1.08);z-index:2}
+  .divider{height:.5px;background:var(--border);margin:1.25rem 0}
+  .ref-text{font-size:13px;color:var(--text-2);line-height:1.9;font-family:var(--mono)}
+  .ref-text span{color:var(--text)}
+  #ref-info{font-family:var(--mono);font-size:13px;color:var(--text-2);min-height:20px;margin-top:6px}
+  @media(max-width:480px){.options-grid{grid-template-columns:1fr}.rc-title{font-size:16px}.key{width:28px;height:26px;font-size:10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="rc-header">
+    <span class="rc-title">REPOSITIONAL/CIPHER</span>
+    <span class="rc-subtitle">a manhattangrid project</span>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('encode')">ENCODE</button>
+    <button class="tab-btn" onclick="switchTab('decode')">DECODE</button>
+    <button class="tab-btn" onclick="switchTab('ref')">KEYBOARD</button>
+  </div>
+
+  <!-- ENCODE -->
+  <div id="tab-encode" class="panel active">
+    <label class="input-label">plaintext</label>
+    <div class="input-area"><textarea id="encode-input" placeholder="Type your message..." oninput="liveEncode()"></textarea></div>
+    <div class="options-grid">
+      <div class="option-row" id="opt-reverse" onclick="toggleOpt('reverse')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Reverse</div><div class="option-desc">Flip the final output</div></div>
+      </div>
+      <div class="option-row" id="opt-mixed" onclick="toggleOpt('mixed')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Mixed Direction</div><div class="option-desc">Alternate L/R neighbors</div></div>
+      </div>
+      <div class="option-row" id="opt-numbers" onclick="toggleOpt('numbers')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Number Row</div><div class="option-desc">Top row → digits</div></div>
+      </div>
+      <div class="option-row" id="opt-double" onclick="toggleOpt('double')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Double Encode</div><div class="option-desc">Encode the result again</div></div>
+      </div>
+    </div>
+    <!-- encode ambig chip: teal when correcting, amber when off -->
+    <div class="ac-wrap" id="acw-encode">
+      <div class="ac" id="ac-encode">
+        <div class="ac-left">
+          <i class="ti ti-adjustments-horizontal ac-icon" aria-hidden="true"></i>
+          <div class="ac-text">Ambiguous word correction<span class="ac-sub" id="ac-sub-encode"></span></div>
+        </div>
+        <div class="yn">
+          <button class="yn-btn active" id="yn-enc-y" onclick="setAmbig('encode',true)">YES</button>
+          <div class="yn-sep"></div>
+          <button class="yn-btn" id="yn-enc-n" onclick="setAmbig('encode',false)">NO</button>
+        </div>
+      </div>
+    </div>
+    <div class="output-card">
+      <div class="copy-toast" id="toast-encode"><div class="copy-toast-dot"></div>Copied!</div>
+      <button class="copy-btn" id="cbtn-encode" onclick="doCopy('encode-result','cbtn-encode','toast-encode')" aria-label="Copy">
+        <div class="cb-iw"><i class="ti ti-copy ic" aria-hidden="true"></i><i class="ti ti-check ik" aria-hidden="true"></i></div>
+      </button>
+      <div class="output-label">encoded output</div>
+      <div class="output-text" id="encode-result">—</div>
+      <div class="output-steps" id="encode-steps" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- DECODE -->
+  <div id="tab-decode" class="panel">
+    <label class="input-label">ciphertext</label>
+    <div class="input-area"><textarea id="decode-input" placeholder="Paste encoded message..." oninput="liveDecode()"></textarea></div>
+    <div class="options-grid">
+      <div class="option-row" id="dopt-reverse" onclick="toggleOpt('dreverse')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Was Reversed</div><div class="option-desc">Un-reverse first</div></div>
+      </div>
+      <div class="option-row" id="dopt-mixed" onclick="toggleOpt('dmixed')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Was Mixed</div><div class="option-desc">Alternate L/R decode</div></div>
+      </div>
+      <div class="option-row" id="dopt-numbers" onclick="toggleOpt('dnumbers')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Number Row</div><div class="option-desc">Digits → top row</div></div>
+      </div>
+      <div class="option-row" id="dopt-double" onclick="toggleOpt('ddouble')">
+        <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
+        <div class="option-info"><div class="option-name">Was Double Encoded</div><div class="option-desc">Decode twice</div></div>
+      </div>
+    </div>
+    <!-- decode ambig chip: always amber (warning only) -->
+    <div class="ac-wrap" id="acw-decode">
+      <div class="ac warn" id="ac-decode">
+        <div class="ac-left">
+          <i class="ti ti-alert-triangle ac-icon" aria-hidden="true"></i>
+          <div class="ac-text">Ambiguous input detected<span class="ac-sub" id="ac-sub-decode"></span></div>
+        </div>
+        <div class="yn">
+          <button class="yn-btn active" id="yn-dec-y" onclick="setAmbig('decode',true)">YES</button>
+          <div class="yn-sep"></div>
+          <button class="yn-btn" id="yn-dec-n" onclick="setAmbig('decode',false)">NO</button>
+        </div>
+      </div>
+    </div>
+    <div class="output-card">
+      <div class="copy-toast" id="toast-decode"><div class="copy-toast-dot"></div>Copied!</div>
+      <button class="copy-btn" id="cbtn-decode" onclick="doCopy('decode-result','cbtn-decode','toast-decode')" aria-label="Copy">
+        <div class="cb-iw"><i class="ti ti-copy ic" aria-hidden="true"></i><i class="ti ti-check ik" aria-hidden="true"></i></div>
+      </button>
+      <div class="output-label">decoded output</div>
+      <div class="output-text" id="decode-result">—</div>
+      <div class="output-steps" id="decode-steps" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- KEYBOARD REF -->
+  <div id="tab-ref" class="panel">
+    <div class="kbd-viz">
+      <div class="kbd-row" id="row0"></div>
+      <div class="kbd-row" id="row1" style="margin-left:17px"></div>
+      <div class="kbd-row" id="row2" style="margin-left:34px"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="ref-text">
+      <div><span>Default       :</span> Each letter → left neighbor (edge letters → right)</div>
+      <div><span>Edge keys     :</span> A→S &nbsp; Z→X &nbsp; Q→W</div>
+      <div><span>Collision pairs :</span> (Q,E)→W &nbsp; (A,D)→S &nbsp; (Z,C)→X</div>
+      <div><span>Ambig rule    :</span> Two DIFFERENT collision-pair members adjacent → second uses alt</div>
+      <div><span>Numbers       :</span> Q=1 W=2 E=3 R=4 T=5 Y=6 U=7 I=8 O=9 P=0</div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:13px;font-weight:500;color:var(--text)">Hover a key to see its cipher mapping</div>
+    <div id="ref-info"></div>
+  </div>
+</div>
+
+<script>
+// ── Keyboard layout ───────────────────────────────────────────
+const ROWS=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
+const LN={},RN={};
+ROWS.forEach(row=>row.forEach((k,i)=>{if(i>0)LN[k]=row[i-1];if(i<row.length-1)RN[k]=row[i+1];}));
+
+// Number row
+const NUM={Q:'1',W:'2',E:'3',R:'4',T:'5',Y:'6',U:'7',I:'8',O:'9',P:'0'};
+const NUM_R={};Object.entries(NUM).forEach(([k,v])=>NUM_R[v]=k);
+
+// ── Collision pairs ───────────────────────────────────────────
+// Three pairs of DIFFERENT letters that both encode to the same output:
+//   (Q,E)→W   (A,D)→S   (Z,C)→X
+const GROUPS=[['Q','E'],['A','D'],['Z','C']];
+
+// True only when a and b are DIFFERENT members of the same collision pair.
+// Same letter (DD, EE, CC) returns false — no ambiguity in a repeated letter.
+function diffGroupMembers(a,b){
+  const au=a.toUpperCase(),bu=b.toUpperCase();
+  if(au===bu)return false;
+  return GROUPS.some(g=>g.includes(au)&&g.includes(bu));
+}
+
+// Which collision group does this letter belong to? null if none.
+function groupOf(a){const au=a.toUpperCase();return GROUPS.find(g=>g.includes(au))||null;}
+
+// ── Primary/fallback neighbor ─────────────────────────────────
+function getRaw(c,goLeft){
+  const C=c.toUpperCase();let p,f;
+  if(goLeft&&LN[C]){p=LN[C];f=RN[C];}
+  else if(!goLeft&&RN[C]){p=RN[C];f=LN[C];}
+  else if(LN[C]){p=LN[C];f=RN[C];}
+  else{p=RN[C];f=LN[C];}
+  return{p,f};
+}
+function mc(r,o){return o===o.toUpperCase()?r.toUpperCase():r.toLowerCase();}
+
+// ── Decode primaries (edge-key first) ─────────────────────────
+// For the three ambiguous outputs, always decode to the edge-key source first:
+//   W → Q  (Q has no left, uses right→W)
+//   S → A  (A has no left, uses right→S)
+//   X → Z  (Z has no left, uses right→X)
+const DEC_PRI={W:'Q',S:'A',X:'Z'};
+const DEC_ALT={W:'E',S:'D',X:'C'};
+
+// ── State ─────────────────────────────────────────────────────
+const STATE={
+  reverse:false,mixed:false,numbers:false,double:false,
+  dreverse:false,dmixed:false,dnumbers:false,ddouble:false,
+  ambigEncode:true,ambigDecode:true
+};
+
+// ── ENCODE ────────────────────────────────────────────────────
+// Ambig rule:
+//   A collision flip is triggered when the current input letter is a DIFFERENT member
+//   of the same collision pair as the previous input letter.
+//   Once a flip is triggered, it PROPAGATES: every subsequent letter that belongs to
+//   the same group also flips, until a letter outside the group is seen.
+//   Same letter repeated (DD, EE) does NOT trigger — no ambiguity there.
+function encodePassMeta(text,mixed,useAmbig){
+  let prevInput=null,wasFlipped=false,activeGroup=null;
+  let dPrevInput=null,dWasFlipped=false,dActiveGroup=null;
+  const meta=[];
+  const result=text.split('').map(ch=>{
+    if(!/[A-Za-z]/.test(ch)){
+      prevInput=null;wasFlipped=false;activeGroup=null;
+      dPrevInput=null;dWasFlipped=false;dActiveGroup=null;
+      meta.push({ch,out:ch,flipped:false,collision:false});
+      return ch;
+    }
+    const goLeft=mixed?(meta.filter(m=>/[A-Za-z]/.test(m.ch)).length%2===0):true;
+    const{p,f}=getRaw(ch,goLeft);
+    const myGroup=groupOf(ch);
+    let detectedCollision=false;
+    if(myGroup){
+      const ft=!!(dPrevInput&&diffGroupMembers(ch,dPrevInput));
+      const prop=!!(dWasFlipped&&dActiveGroup&&myGroup===dActiveGroup);
+      detectedCollision=(ft||prop)&&!!f;
+      dWasFlipped=detectedCollision;
+      dActiveGroup=detectedCollision?myGroup:null;
+    }else{dWasFlipped=false;dActiveGroup=null;}
+    dPrevInput=ch.toUpperCase();
+    let chosen=p,flipped=false;
+    if(useAmbig&&myGroup){
+      const firstTrigger=!!(prevInput&&diffGroupMembers(ch,prevInput));
+      const propagate=!!(wasFlipped&&activeGroup&&myGroup===activeGroup);
+      if((firstTrigger||propagate)&&f){chosen=f;flipped=true;}
+    }
+    wasFlipped=flipped;
+    activeGroup=flipped?myGroup:null;
+    prevInput=ch.toUpperCase();
+    const out=mc(chosen,ch);
+    meta.push({ch,out,flipped,collision:detectedCollision});
+    return out;
+  }).join('');
+  return{result,meta};
+}
+
+function encodePass(text,mixed,useAmbig){return encodePassMeta(text,mixed,useAmbig).result;}
+
+function encodeMsg(text,opts,useAmbig){
+  const{result:r1,meta}=encodePassMeta(text,opts.mixed,useAmbig);
+  let result=r1;
+  if(opts.numbers)result=applyNum(result);
+  if(opts.double){result=encodePass(result,opts.mixed,useAmbig);if(opts.numbers)result=applyNum(result);}
+  if(opts.reverse)result=result.split('').reverse().join('');
+  return{result,meta};
+}
+
+// ── DECODE ────────────────────────────────────────────────────
+// For ambiguous outputs (W, S, X) use edge-key as primary source.
+// The notification fires whenever the input contains W, S, or X — those are the only
+// outputs with two possible sources, so any such char is inherently ambiguous.
+// The YES/NO toggle switches between edge-key primary (YES) and the other group member (NO).
+function decodePassMeta(text,mixed,useAmbig){
+  let li=0;
+  const meta=[];
+  const result=text.split('').map(ch=>{
+    if(!/[A-Za-z]/.test(ch)){meta.push({ch,out:ch,ambig:false});return ch;}
+    const C=ch.toUpperCase();
+    const isAmbigChar=!!(DEC_PRI[C]); // W, S, or X — always detected regardless of toggle
+    let out;
+    if(isAmbigChar){
+      // useAmbig YES → edge-key primary (Q/A/Z), NO → other member (E/D/C)
+      const src=useAmbig?DEC_PRI[C]:DEC_ALT[C];
+      out=mc(src,ch);
+    }else{
+      const goLeft=mixed?(li%2===0):true;
+      let found=null;
+      'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
+        const{p}=getRaw(k,goLeft);
+        if(p===C)found=k;
+      });
+      out=found?mc(found,ch):ch;
+    }
+    meta.push({ch,out,ambig:isAmbigChar}); // ambig flag always set, independent of toggle
+    li++;
+    return out;
+  }).join('');
+  return{result,meta};
+}
+
+function decodePass(text,mixed,useAmbig){return decodePassMeta(text,mixed,useAmbig).result;}
+
+function decodeMsg(text,opts,useAmbig){
+  let work=text;
+  if(opts.dreverse)work=work.split('').reverse().join('');
+  if(opts.ddouble){
+    if(opts.dnumbers)work=revNum(work);
+    work=decodePass(work,opts.dmixed,useAmbig);
+  }
+  if(opts.dnumbers)work=revNum(work);
+  return decodePassMeta(work,opts.dmixed,useAmbig);
+}
+
+// ── Utilities ─────────────────────────────────────────────────
+function applyNum(t){return t.split('').map(c=>NUM[c.toUpperCase()]||c).join('');}
+function revNum(t){return t.split('').map(c=>NUM_R[c]||c).join('');}
+
+// ── Steps builder ─────────────────────────────────────────────
+function buildSteps(input,encoded,meta,mode){
+  let html='',li=0;
+  const chars=input.split(''),outChars=encoded.split('');
+  const lm=meta?meta.filter(m=>/[A-Za-z]/.test(m.ch)):[];
+  for(let i=0;i<chars.length&&li<8;i++){
+    if(!/[A-Za-z]/.test(chars[i]))continue;
+    const m=lm[li]||null;
+    const out=outChars[i]||'?';
+    const delay=(li*0.04).toFixed(2);
+    let badge='';
+    if(mode==='encode'&&m){
+      if(m.flipped)
+        badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--teal-bg);color:var(--teal);margin-left:5px;font-family:var(--sans)">corrected</span>`;
+      else if(m.collision)
+        badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--amber-bg);color:var(--amber);margin-left:5px;font-family:var(--sans)">no alt</span>`;
+    }
+    if(mode==='decode'&&m&&m.ambig)
+      badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--amber-bg);color:var(--amber);margin-left:5px;font-family:var(--sans)">ambiguous</span>`;
+    html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${chars[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${badge}</div>`;
+    li++;
+  }
+  const lc=input.replace(/[^A-Za-z]/g,'').length;
+  if(lc>8)html+=`<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-family:var(--mono)">+${lc-8} more</div>`;
+  return html;
+}
+
+// ── Live encode ───────────────────────────────────────────────
+function liveEncode(){
+  const input=document.getElementById('encode-input').value;
+  const rEl=document.getElementById('encode-result'),sEl=document.getElementById('encode-steps');
+  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';showChip('encode',false);return;}
+  const opts={reverse:STATE.reverse,mixed:STATE.mixed,numbers:STATE.numbers,double:STATE.double};
+  const{result,meta}=encodeMsg(input,opts,STATE.ambigEncode);
+  rEl.textContent=result;
+  sEl.innerHTML=buildSteps(input,result,meta,'encode');
+  sEl.style.display='block';
+
+  // Chip stays visible as long as collisions exist, regardless of YES/NO state
+  const collisions=meta.filter(m=>m.collision);
+  if(!collisions.length){showChip('encode',false);return;}
+  showChip('encode',true);
+  const chip=document.getElementById('ac-encode'),sub=document.getElementById('ac-sub-encode');
+  const corrected=meta.filter(m=>m.flipped).length;
+  const noAlt=meta.filter(m=>m.collision&&!m.flipped).length;
+  if(STATE.ambigEncode){
+    chip.classList.remove('warn');
+    sub.textContent=`${corrected} collision${corrected!==1?'s':''} auto-corrected`+(noAlt?` · ${noAlt} unavoidable`:'');
+  }else{
+    chip.classList.add('warn');
+    sub.textContent=`${collisions.length} ambiguous pair${collisions.length!==1?'s':''} detected — correction is off`;
+  }
+}
+
+// ── Live decode ───────────────────────────────────────────────
+function liveDecode(){
+  const input=document.getElementById('decode-input').value;
+  const rEl=document.getElementById('decode-result'),sEl=document.getElementById('decode-steps');
+  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';showChip('decode',false);return;}
+  const opts={dreverse:STATE.dreverse,dmixed:STATE.dmixed,dnumbers:STATE.dnumbers,ddouble:STATE.ddouble};
+  const{result,meta}=decodeMsg(input,opts,STATE.ambigDecode);
+  rEl.textContent=result;
+  sEl.innerHTML=buildSteps(input,result,meta,'decode');
+  sEl.style.display='block';
+
+  // Chip stays visible as long as ambig chars exist, regardless of YES/NO state
+  const ambigChars=meta.filter(m=>m.ambig);
+  if(!ambigChars.length){showChip('decode',false);return;}
+  showChip('decode',true);
+  const chip=document.getElementById('ac-decode'),sub=document.getElementById('ac-sub-decode');
+  const count=ambigChars.length;
+  if(STATE.ambigDecode){
+    chip.classList.remove('warn');
+    sub.textContent=`${count} letter${count!==1?'s':''} (W/S/X) detected using edge-key source (Q/A/Z)`;
+  }else{
+    chip.classList.add('warn');
+    sub.textContent=`${count} letter${count!==1?'s':''} (W/S/X) detected using alt source (E/D/C)`;
+  }
+}
+
+// ── Chip ──────────────────────────────────────────────────────
+function showChip(panel,show){
+  document.getElementById('acw-'+panel).classList.toggle('visible',show);
+}
+
+// ── Ambig YES/NO ──────────────────────────────────────────────
+function setAmbig(panel,val){
+  if(panel==='encode'){
+    STATE.ambigEncode=val;
+    document.getElementById('yn-enc-y').classList.toggle('active',val);
+    document.getElementById('yn-enc-n').classList.toggle('active',!val);
+    liveEncode();
+  }else{
+    STATE.ambigDecode=val;
+    document.getElementById('yn-dec-y').classList.toggle('active',val);
+    document.getElementById('yn-dec-n').classList.toggle('active',!val);
+    liveDecode();
+  }
+}
+
+// ── Option toggles ────────────────────────────────────────────
+function toggleOpt(id){
+  STATE[id]=!STATE[id];
+  const elId=id.startsWith('d')&&id!=='double'?'dopt-'+id.slice(1):'opt-'+id;
+  const el=document.getElementById(elId);
+  if(el)el.classList.toggle('checked',STATE[id]);
+  id.startsWith('d')&&id!=='double'?liveDecode():liveEncode();
+}
+function switchTab(name){
+  ['encode','decode','ref'].forEach((t,i)=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.querySelectorAll('.tab-btn')[i].classList.toggle('active',t===name);
+  });
+  if(name==='ref')buildKeyboard();
+}
+function doCopy(textId,btnId,toastId){
+  const text=document.getElementById(textId).textContent;
+  if(!text||text==='—')return;
+  const btn=document.getElementById(btnId),toast=document.getElementById(toastId);
+  if(btn._busy)return;
+  navigator.clipboard.writeText(text).catch(()=>{});
+  btn._busy=true;btn.classList.add('copied');toast.classList.add('show');
+  setTimeout(()=>{btn.classList.remove('copied');toast.classList.remove('show');btn._busy=false;},1800);
+}
+
+// ── Keyboard ──────────────────────────────────────────────────
+function buildKeyboard(){
+  ROWS.forEach((row,ri)=>{
+    const rowEl=document.getElementById('row'+ri);rowEl.innerHTML='';
+    row.forEach(k=>{
+      const el=document.createElement('div');
+      el.className='key';el.textContent=k;el.dataset.key=k;
+      el.addEventListener('mouseenter',()=>{
+        document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
+        const{p:enc}=getRaw(k,true);
+        document.querySelectorAll('.key').forEach(e=>{
+          if(e.dataset.key===k)e.classList.add('hl-from');
+          if(e.dataset.key===enc)e.classList.add('hl-to');
+        });
+        const numI=NUM[k]?` · number: ${k}=${NUM[k]}`:'';
+        const grp=GROUPS.find(g=>g.includes(k));
+        const grpI=grp?` · collision pair: [${grp.join(',')}]`:'';
+        document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${grpI}`;
+      });
+      el.addEventListener('mouseleave',()=>{
+        document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
+        document.getElementById('ref-info').textContent='';
+      });
+      rowEl.appendChild(el);
+    });
+  });
+}
+buildKeyboard();
+</script>
+</body>
+</html>
