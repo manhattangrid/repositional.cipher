@@ -218,19 +218,19 @@
     <div class="options-grid">
       <div class="option-row" id="opt-reverse" onclick="toggleOpt('reverse')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Reverse</div><div class="option-desc">Flip output</div></div>
+        <div class="option-info"><div class="option-name">Reverse</div><div class="option-desc">Turn the whole message around</div></div>
       </div>
       <div class="option-row" id="opt-mixed" onclick="toggleOpt('mixed')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Mixed</div><div class="option-desc">Alt L/R shift</div></div>
+        <div class="option-info"><div class="option-name">Mixed</div><div class="option-desc">1st letter moves 1 key, 2nd moves 2, repeats</div></div>
       </div>
       <div class="option-row" id="opt-numbers" onclick="toggleOpt('numbers')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Top row → digits</div></div>
+        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Digits shift too; top row letters become numbers</div></div>
       </div>
       <div class="option-row" id="opt-double" onclick="toggleOpt('double')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">Encode twice</div></div>
+        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">Shift the whole message left one more time</div></div>
       </div>
     </div>
     <div class="all-warn" id="all-features-warn">
@@ -256,19 +256,19 @@
     <div class="options-grid">
       <div class="option-row" id="dopt-reverse" onclick="toggleOpt('dreverse')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Reversed</div><div class="option-desc">Un-reverse first</div></div>
+        <div class="option-info"><div class="option-name">Reversed</div><div class="option-desc">It was turned around before decoding</div></div>
       </div>
       <div class="option-row" id="dopt-mixed" onclick="toggleOpt('dmixed')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Was Mixed</div><div class="option-desc">Alt L/R decode</div></div>
+        <div class="option-info"><div class="option-name">Was Mixed</div><div class="option-desc">1st moved 1 key, 2nd moved 2, and so on</div></div>
       </div>
       <div class="option-row" id="dopt-numbers" onclick="toggleOpt('dnumbers')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Digits → letters</div></div>
+        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Digits were used; top row became numbers</div></div>
       </div>
       <div class="option-row" id="dopt-double" onclick="toggleOpt('ddouble')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">Decode twice</div></div>
+        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">It was shifted left a second time</div></div>
       </div>
     </div>
     <div class="output-card">
@@ -304,17 +304,15 @@
     </div>
     <div class="divider"></div>
     <div class="ref-text">
-      <div><span>Encode rule   :</span> Every letter → left neighbor on its row</div>
-      <div><span>Edge wrap     :</span> Far-left keys wrap to far-right of the same row</div>
-      <div><span>Wrap keys     :</span> Q→P &nbsp;·&nbsp; A→L &nbsp;·&nbsp; Z→M</div>
-      <div><span>Top row       :</span> Q→P, W→Q, E→W, R→E … P→O</div>
-      <div><span>Home row      :</span> A→L, S→A, D→S, F→D … L→K</div>
-      <div><span>Bottom row    :</span> Z→M, X→Z, C→X, V→C … M→N</div>
-      <div><span>Decode        :</span> Shift right on each row (P→Q, L→A, M→Z at edges)</div>
-      <div><span>Example       :</span> ADD → LSS (A wraps to L; D→S; D→S)</div>
-      <div><span>Mixed mode    :</span> Odd letters shift right (with wrap) instead</div>
-      <div><span>Number row    :</span> After encode: Q=1 W=2 E=3 … P=0</div>
-      <div><span>Extras        :</span> Reverse · Double encode</div>
+      <div><span>Standard      :</span> Letters ←1 on row · spaces/punctuation unchanged</div>
+      <div><span>Edge wrap     :</span> Q→P · A→L · Z→M (far-left wraps to far-right)</div>
+      <div><span>Numbers ON    :</span> Digits in text ←1 (1→0 … 0→9)</div>
+      <div><span>Number row    :</span> Then top-row letters → Q=1 W=2 E=3 … P=0</div>
+      <div><span>Mixed ON      :</span> Count letters/digits only — odd ←1 · even ←2</div>
+      <div><span>Double ON     :</span> After pass 1, whole message ←1 again (letters + digits)</div>
+      <div><span>Reverse ON    :</span> Flip final string (decode: un-reverse first)</div>
+      <div><span>Decode        :</span> un-reverse → 1-0→letters → undo double → undo main</div>
+      <div><span>Example       :</span> ADD → LSS &nbsp;·&nbsp; A1 (all on) → 8K</div>
     </div>
     <div class="ref-legend">
       <span><i class="ref-swatch" style="background:var(--hl-edge-bg);border-color:var(--hl-edge-bd)"></i> Wrap key</span>
@@ -338,7 +336,7 @@
     <div class="bc-wrap">
       <div class="bc-popup" id="popup-info">
         <span class="bc-popup-label">about</span>
-        <p class="info-text">The Repositional Cipher shifts each letter to its left neighbor on the QWERTY row. Keys on the far left (Q, A, Z) wrap to the far right of that row. Decode by shifting right. Fully reversible — no collisions. Optional mixed, number row, reverse, and double-encode modes.</p>
+        <p class="info-text">Each letter shifts left on its QWERTY row (edge keys wrap). Numbers mode also shifts digits ←1 on 1–0, then converts top-row letters to digits (Q=1 … P=0). Mixed alternates ←1 / ←2. Double adds a second ←1 pass; Reverse flips the final string.</p>
       </div>
       <button class="bc-btn" onclick="togglePopup('info')">Info</button>
     </div>
@@ -393,9 +391,9 @@
 <script>
 // ── Keyboard layout ───────────────────────────────────────────
 const ROWS=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
+const DIGITS=['1','2','3','4','5','6','7','8','9','0'];
 const ROW_OF={};
-const EDGE_WRAP=new Set(['Q','A','Z']); // far-left keys wrap to far-right of row
-
+const EDGE_WRAP=new Set(['Q','A','Z']);
 ROWS.forEach(row=>row.forEach(k=>{ROW_OF[k]=row;}));
 
 function wrapLeft(k){
@@ -406,99 +404,235 @@ function wrapRight(k){
   const row=ROW_OF[k],i=row.indexOf(k);
   return row[(i+1)%row.length];
 }
+function numWrapLeft(d){
+  const i=DIGITS.indexOf(d);
+  return i<0?d:DIGITS[(i-1+DIGITS.length)%DIGITS.length];
+}
+function numWrapRight(d){
+  const i=DIGITS.indexOf(d);
+  return i<0?d:DIGITS[(i+1)%DIGITS.length];
+}
+function shiftLeftLetter(k,n){let r=k;for(let i=0;i<n;i++)r=wrapLeft(r);return r;}
+function shiftRightLetter(k,n){let r=k;for(let i=0;i<n;i++)r=wrapRight(r);return r;}
+function shiftLeftDigit(d,n){let r=d;for(let i=0;i<n;i++)r=numWrapLeft(r);return r;}
+function shiftRightDigit(d,n){let r=d;for(let i=0;i<n;i++)r=numWrapRight(r);return r;}
 function mc(r,o){return o===o.toUpperCase()?r.toUpperCase():r.toLowerCase();}
+function isLetter(ch){return /[A-Za-z]/.test(ch);}
+function isDigit(ch){return /[0-9]/.test(ch);}
+function countsForCipher(ch,numbers){return isLetter(ch)||(numbers&&isDigit(ch));}
 
-const ENC_MAP={},DEC_MAP={};
-'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
-  ENC_MAP[k]=wrapLeft(k);
-  DEC_MAP[k]=wrapRight(k);
-});
+const ENC_MAP={};
+'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{ENC_MAP[k]=wrapLeft(k);});
 
+// Top-row letter → digit (applied after cipher passes when Numbers ON)
 const NUM={Q:'1',W:'2',E:'3',R:'4',T:'5',Y:'6',U:'7',I:'8',O:'9',P:'0'};
 const NUM_R={};Object.entries(NUM).forEach(([k,v])=>NUM_R[v]=k);
+function applyNum(t){return t.split('').map(c=>NUM[c.toUpperCase()]||c).join('');}
+function revNum(t){return t.split('').map(c=>NUM_R[c]||c).join('');}
+function applyNumTracked(t){
+  const numSubst=[];
+  const result=t.split('').map(c=>{
+    const u=c.toUpperCase();
+    if(NUM[u]){numSubst.push(true);return NUM[u];}
+    numSubst.push(false);
+    return c;
+  }).join('');
+  return{result,numSubst};
+}
+function revNumTracked(t,mask){
+  if(!mask||mask.length!==t.length)return revNum(t);
+  return t.split('').map((c,i)=>mask[i]&&NUM_R[c]?NUM_R[c]:c).join('');
+}
+let LAST_NUM_SUB=null;
+const ENC_STORE_KEY='rc-v15-last-encode';
+
+function persistEncodeState(output,mask){
+  LAST_NUM_SUB=mask;
+  try{
+    sessionStorage.setItem(ENC_STORE_KEY,JSON.stringify({output,mask}));
+  }catch(e){}
+}
+
+function loadStoredMask(ciphertext){
+  try{
+    const s=JSON.parse(sessionStorage.getItem(ENC_STORE_KEY)||'null');
+    if(s&&s.output===ciphertext&&s.mask&&s.mask.length===ciphertext.length)return s.mask;
+  }catch(e){}
+  return null;
+}
+
+function decodeOptsToEncode(opts){
+  return{mixed:opts.dmixed,numbers:opts.dnumbers,double:opts.ddouble,reverse:opts.dreverse};
+}
+
+function prepDecodeWork(ciphertext,mask,opts){
+  let work=ciphertext,m=mask;
+  if(opts.dreverse){
+    work=work.split('').reverse().join('');
+    if(m)m=[...m].reverse();
+  }
+  if(opts.dnumbers){
+    if(m)work=revNumTracked(work,m);
+    else if(!/[A-Za-z]/.test(work))work=revNum(work);
+  }
+  if(opts.ddouble)work=decodeDoublePass(work,opts.dnumbers);
+  return work;
+}
+
+function decodeWithMask(ciphertext,mask,opts){
+  return decodeMainPassMeta(prepDecodeWork(ciphertext,mask,opts),opts.dmixed,opts.dnumbers).result;
+}
+
+function decodeCandidateScore(plain,mask){
+  const letters=(plain.match(/[A-Za-z]/g)||[]).length;
+  const digits=(plain.match(/[0-9]/g)||[]).length;
+  const substs=mask?mask.filter(Boolean).length:0;
+  return letters*10000+digits*50-subs*10;
+}
+
+function findNumSubstMask(ciphertext,opts){
+  const stored=loadStoredMask(ciphertext);
+  if(stored)return stored;
+  const digitIdx=[];
+  for(let i=0;i<ciphertext.length;i++)if(/[0-9]/.test(ciphertext[i]))digitIdx.push(i);
+  if(!digitIdx.length)return null;
+  if(digitIdx.length>22)return LAST_NUM_SUB&&LAST_NUM_SUB.length===ciphertext.length?LAST_NUM_SUB:null;
+  const encOpts=decodeOptsToEncode(opts);
+  const total=1<<digitIdx.length;
+  let bestMask=null,bestScore=-Infinity,bestSubs=Infinity;
+  for(let b=0;b<total;b++){
+    const mask=ciphertext.split('').map(()=>false);
+    digitIdx.forEach((idx,j)=>{mask[idx]=!!((b>>j)&1);});
+    const plain=decodeWithMask(ciphertext,mask,opts);
+    if(encodeMsg(plain,encOpts).result!==ciphertext)continue;
+    const sc=decodeCandidateScore(plain,mask);
+    const subs=mask.filter(Boolean).length;
+    if(sc>bestScore||(sc===bestScore&&subs<bestSubs)){
+      bestScore=sc;
+      bestSubs=subs;
+      bestMask=mask;
+    }
+  }
+  if(bestMask)return bestMask;
+  if(!/[A-Za-z]/.test(ciphertext))return ciphertext.split('').map(c=>/[0-9]/.test(c));
+  return null;
+}
 
 const STATE={
   reverse:false,mixed:false,numbers:false,double:false,
   dreverse:false,dmixed:false,dnumbers:false,ddouble:false
 };
 
-function encodePassMeta(text,mixed){
+// Card 1 / Card 2 — Pass 1: main shift (standard or mixed)
+function encodeMainPassMeta(text,mixed,numbers){
   const meta=[];
-  let letterIdx=0;
+  let pos=0;
   const result=text.split('').map(ch=>{
-    if(!/[A-Za-z]/.test(ch)){
-      meta.push({ch,out:ch,wrap:false});
+    if(!countsForCipher(ch,numbers)){
+      meta.push({ch,out:ch,wrap:false,shift:0});
       return ch;
     }
-    const C=ch.toUpperCase();
-    const goRight=mixed&&(letterIdx%2===1);
-    letterIdx++;
-    const outKey=goRight?wrapRight(C):wrapLeft(C);
-    const out=mc(outKey,ch);
-    meta.push({ch,out,wrap:EDGE_WRAP.has(C)&&!goRight});
+    const steps=mixed?(pos%2===0?1:2):1;
+    pos++;
+    let out;
+    if(isLetter(ch)){
+      const C=ch.toUpperCase();
+      out=mc(shiftLeftLetter(C,steps),ch);
+      meta.push({ch,out,wrap:steps===1&&(EDGE_WRAP.has(C)||false),shift:steps});
+    }else{
+      out=shiftLeftDigit(ch,steps);
+      meta.push({ch,out,wrap:steps===1&&ch==='1',shift:steps});
+    }
     return out;
   }).join('');
   return{result,meta};
 }
 
-function encodePass(text,mixed){return encodePassMeta(text,mixed).result;}
+// Card 2 — Pass 2: standard ←1 on whole message (when Double ON)
+function encodeDoublePass(text,numbers){
+  return text.split('').map(ch=>{
+    if(isLetter(ch))return mc(wrapLeft(ch.toUpperCase()),ch);
+    if(numbers&&isDigit(ch))return numWrapLeft(ch);
+    return ch;
+  }).join('');
+}
+
+function decodeMainPassMeta(text,mixed,numbers){
+  const meta=[];
+  let pos=0;
+  const result=text.split('').map(ch=>{
+    if(!countsForCipher(ch,numbers)){
+      meta.push({ch,out:ch,wrap:false,shift:0});
+      return ch;
+    }
+    const steps=mixed?(pos%2===0?1:2):1;
+    pos++;
+    let out;
+    if(isLetter(ch)){
+      const C=ch.toUpperCase();
+      out=mc(shiftRightLetter(C,steps),ch);
+      meta.push({ch,out,wrap:false,shift:steps});
+    }else{
+      out=shiftRightDigit(ch,steps);
+      meta.push({ch,out,wrap:false,shift:steps});
+    }
+    return out;
+  }).join('');
+  return{result,meta};
+}
+
+function decodeDoublePass(text,numbers){
+  return text.split('').map(ch=>{
+    if(isLetter(ch))return mc(wrapRight(ch.toUpperCase()),ch);
+    if(numbers&&isDigit(ch))return numWrapRight(ch);
+    return ch;
+  }).join('');
+}
 
 function encodeMsg(text,opts){
-  const{result:r1,meta}=encodePassMeta(text,opts.mixed);
+  const{result:r1,meta}=encodeMainPassMeta(text,opts.mixed,opts.numbers);
   let result=r1;
-  if(opts.double)result=encodePass(result,opts.mixed);
-  if(opts.numbers)result=applyNum(result);
-  if(opts.reverse)result=result.split('').reverse().join('');
-  return{result,meta};
+  let numSubst=null;
+  if(opts.double)result=encodeDoublePass(result,opts.numbers);
+  if(opts.numbers){
+    const ap=applyNumTracked(result);
+    result=ap.result;
+    numSubst=ap.numSubst;
+  }
+  if(opts.reverse){
+    result=result.split('').reverse().join('');
+    if(numSubst)numSubst=[...numSubst].reverse();
+  }
+  persistEncodeState(result,numSubst);
+  return{result,meta,numSubst};
 }
-
-function decodePassMeta(text,mixed){
-  const meta=[];
-  let letterIdx=0;
-  const result=text.split('').map(ch=>{
-    if(!/[A-Za-z]/.test(ch)){
-      meta.push({ch,out:ch,wrap:false});
-      return ch;
-    }
-    const C=ch.toUpperCase();
-    const goRight=mixed&&(letterIdx%2===1);
-    letterIdx++;
-    const found=goRight?wrapLeft(C):wrapRight(C);
-    const out=mc(found,ch);
-    meta.push({ch,out,wrap:false});
-    return out;
-  }).join('');
-  return{result,meta};
-}
-
-function decodePass(text,mixed){return decodePassMeta(text,mixed).result;}
 
 function decodeMsg(text,opts){
-  let work=text;
-  if(opts.dreverse)work=work.split('').reverse().join('');
-  if(opts.dnumbers)work=revNum(work);
-  if(opts.ddouble)work=decodePass(work,opts.dmixed);
-  return decodePassMeta(work,opts.dmixed);
+  if(!opts.dnumbers){
+    let work=text;
+    if(opts.dreverse)work=work.split('').reverse().join('');
+    if(opts.ddouble)work=decodeDoublePass(work,false);
+    return decodeMainPassMeta(work,opts.dmixed,false);
+  }
+  const mask=findNumSubstMask(text,opts);
+  return decodeMainPassMeta(prepDecodeWork(text,mask,opts),opts.dmixed,opts.dnumbers);
 }
 
-function applyNum(t){return t.split('').map(c=>NUM[c.toUpperCase()]||c).join('');}
-function revNum(t){return t.split('').map(c=>NUM_R[c]||c).join('');}
-
-function buildSteps(input,encoded,meta,mode){
-  let html='',li=0,oi=0;
-  const chars=input.split(''),outChars=encoded.split('');
-  const lm=meta?meta.filter(m=>/[A-Za-z]/.test(m.ch)):[];
-  for(let i=0;i<chars.length&&li<8;i++){
-    if(!/[A-Za-z]/.test(chars[i])){oi++;continue;}
-    const m=lm[li]||null;
-    const out=outChars[oi]||'?';
-    const delay=(li*0.04).toFixed(2);
-    const wrapBadge=m&&m.wrap?`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--hl-edge-bg);color:var(--hl-edge-fg);margin-left:5px;font-family:var(--sans)">wrap</span>`:'';
-    html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${chars[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${wrapBadge}</div>`;
-    li++;oi++;
+function buildSteps(input,encoded,meta,numbers){
+  const inc=input.split('').filter(c=>countsForCipher(c,numbers));
+  const outc=encoded.split('').filter(c=>countsForCipher(c,numbers));
+  const passMeta=meta?meta.filter(m=>m.shift>0):[];
+  let html='';
+  for(let i=0;i<Math.min(8,inc.length);i++){
+    const m=passMeta[i];
+    const out=outc[i]||'?';
+    const delay=(i*0.04).toFixed(2);
+    let badge='';
+    if(m&&m.wrap)badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--hl-edge-bg);color:var(--hl-edge-fg);margin-left:5px;font-family:var(--sans)">wrap</span>`;
+    else if(m&&m.shift===2)badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--hl-to-bg);color:var(--hl-to-fg);margin-left:5px;font-family:var(--sans)">←2</span>`;
+    html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${inc[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${badge}</div>`;
   }
-  const lc=input.replace(/[^A-Za-z]/g,'').length;
-  if(lc>8)html+=`<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-family:var(--mono)">+${lc-8} more</div>`;
+  if(inc.length>8)html+=`<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-family:var(--mono)">+${inc.length-8} more</div>`;
   return html;
 }
 
@@ -514,7 +648,7 @@ function liveEncode(){
   const opts={reverse:STATE.reverse,mixed:STATE.mixed,numbers:STATE.numbers,double:STATE.double};
   const{result,meta}=encodeMsg(input,opts);
   rEl.textContent=result;
-  sEl.innerHTML=buildSteps(input,result,meta,'encode');
+  sEl.innerHTML=buildSteps(input,result,meta,STATE.numbers);
   sEl.style.display='block';
   checkAllWarn();
 }
@@ -526,7 +660,7 @@ function liveDecode(){
   const opts={dreverse:STATE.dreverse,dmixed:STATE.dmixed,dnumbers:STATE.dnumbers,ddouble:STATE.ddouble};
   const{result,meta}=decodeMsg(input,opts);
   rEl.textContent=result;
-  sEl.innerHTML=buildSteps(input,result,meta,'decode');
+  sEl.innerHTML=buildSteps(input,result,meta,STATE.dnumbers);
   sEl.style.display='block';
   const needsHint=STATE.dmixed||STATE.dreverse||STATE.dnumbers||STATE.ddouble;
   setDecIcon(needsHint);
@@ -572,8 +706,8 @@ function showKeyInfo(k){
     if(e.dataset.key===k)e.classList.add('hl-from');
     if(e.dataset.key===enc)e.classList.add('hl-to');
   });
-  const numI=NUM[k]?` · number: ${k}=${NUM[k]}`:'';
-  const ruleI=EDGE_WRAP.has(k)?' · edge wrap (left → far right)':' · shift left';
+  const numI=NUM[k]?` · number row: ${k}=${NUM[k]}`:'';
+  const ruleI=EDGE_WRAP.has(k)?' · edge wrap (←1)':' · standard ←1';
   document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${ruleI}`;
 }
 
