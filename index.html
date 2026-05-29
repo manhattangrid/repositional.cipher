@@ -56,25 +56,40 @@
   .cb-check{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:16;stroke-dashoffset:16;transition:stroke-dashoffset .3s cubic-bezier(.4,0,.2,1),stroke .2s}
   .checked .cb-box{stroke:var(--text)}.checked .cb-check{stroke-dashoffset:0}
 
-  /* ── ambig chip ── */
-  .ac-wrap{overflow:hidden;max-height:0;opacity:0;margin-bottom:0;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s,margin-bottom .3s}
-  .ac-wrap.visible{max-height:80px;opacity:1;margin-bottom:8px}
-  .ac{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:var(--r);border:.5px solid var(--teal-bd);background:var(--teal-bg);transition:border-color .25s,background .25s}
-  .ac.warn{border-color:var(--amber-bd);background:var(--amber-bg)}
-  .ac-left{display:flex;align-items:center;gap:8px}
-  .ac-icon{font-size:15px;color:var(--teal);transition:color .25s;flex-shrink:0}
-  .ac.warn .ac-icon{color:var(--amber)}
-  .ac-text{font-size:12px;font-weight:500;color:var(--teal);line-height:1.35;transition:color .25s}
-  .ac.warn .ac-text{color:var(--amber)}
-  .ac-sub{font-size:11px;font-weight:400;opacity:.8;display:block}
-  .yn{display:flex;align-items:center;border:.5px solid var(--teal-bd);border-radius:6px;overflow:hidden;flex-shrink:0;transition:border-color .25s}
-  .ac.warn .yn{border-color:var(--amber-bd)}
-  .yn-btn{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border:none;cursor:pointer;background:transparent;color:var(--teal);transition:background .2s,color .2s;letter-spacing:.3px}
-  .ac.warn .yn-btn{color:var(--amber)}
-  .yn-btn.active{background:var(--teal);color:var(--teal-bg)}
-  .ac.warn .yn-btn.active{background:var(--amber);color:var(--amber-bg)}
-  .yn-sep{width:.5px;background:var(--teal-bd);height:22px;flex-shrink:0;transition:background .25s}
-  .ac.warn .yn-sep{background:var(--amber-bd)}
+  /* ── ambig tooltip icon ── */
+  .output-label-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .output-label-row .output-label{margin-bottom:0}
+  .ambig-icon{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0;padding-bottom:10px;margin-bottom:-10px}
+  .ambig-icon i{font-size:14px;color:var(--text-3);transition:color .15s;display:block}
+  .ambig-icon.warn i{color:var(--text-2)}
+  .ambig-icon:hover i{opacity:.8}
+  .ambig-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:10px 12px;min-width:220px;max-width:260px;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s cubic-bezier(.34,1.56,.64,1);z-index:50;white-space:normal}
+  .ambig-icon:hover .ambig-tip,.ambig-icon.open .ambig-tip{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+  .ambig-tip-title{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:5px;font-family:var(--mono)}
+  .ambig-tip-sub{font-size:11px;color:var(--text-2);line-height:1.5;margin-bottom:7px;font-family:var(--mono)}
+  .ambig-tip-disc{font-size:10px;color:var(--text-3);line-height:1.4;font-style:italic;margin-bottom:8px}
+  .ambig-tip-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2);font-family:var(--mono)}
+  .yn{display:flex;align-items:center;border:.5px solid var(--border-2);border-radius:6px;overflow:hidden;flex-shrink:0}
+  .yn-btn{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border:none;cursor:pointer;background:transparent;color:var(--text-2);transition:background .2s,color .2s;letter-spacing:.3px}
+  .yn-btn.active{background:var(--teal);color:var(--bg)}
+  .yn-sep{width:.5px;background:var(--border-2);height:22px;flex-shrink:0}
+  /* hidden — kept so JS refs don't break */
+  .ac-wrap{display:none}
+  /* ── credits & info ── */
+  .bottom-controls{position:fixed;bottom:20px;left:20px;z-index:100;display:flex;gap:8px;align-items:flex-end}
+  @media(max-width:600px){.bottom-controls{position:static;margin-top:2rem;padding-left:4px;flex-direction:row;align-items:flex-start}}
+  .bc-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
+  .bc-btn:hover{color:var(--text-2);border-color:var(--border-2)}
+  .bc-popup{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:12px 14px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1);min-width:180px}
+  .bc-wrap{position:relative}
+  .bc-wrap:hover .bc-popup{opacity:1;transform:translateY(0);pointer-events:auto}
+  .bc-popup-label{color:var(--text-3);display:block;font-size:10px;font-family:var(--mono);letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
+  .bc-popup p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
+  .bc-popup .info-text{font-family:var(--sans);font-size:12px;color:var(--text-2);line-height:1.6;white-space:normal;max-width:240px}
+  @media(hover:none){
+    .bc-wrap:hover .bc-popup{opacity:0;pointer-events:none}
+    .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
+  }
 
   /* ── output card ── */
   .output-card{background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:14px 16px;min-height:52px;position:relative}
@@ -112,17 +127,20 @@
   #ref-info{font-family:var(--mono);font-size:13px;color:var(--text-2);min-height:20px;margin-top:6px}
   @media(max-width:480px){.options-grid{grid-template-columns:1fr}.rc-title{font-size:16px}.key{width:28px;height:26px;font-size:10px}}
 
-  /* ── credits ── */
-  .credits-wrap{position:fixed;bottom:20px;left:20px;z-index:100}
-  .credits-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
-  .credits-btn:hover{color:var(--text-2);border-color:var(--border-2)}
-  .credits-box{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:10px 14px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1)}
-  .credits-wrap:hover .credits-box{opacity:1;transform:translateY(0);pointer-events:auto}
-  .credits-box p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
-  .credits-box span{color:var(--text-3);display:block;font-size:10px;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+  /* ── credits & info ── */
+  .bottom-controls{position:fixed;bottom:20px;left:20px;z-index:100;display:flex;gap:8px;align-items:flex-end}
+  @media(max-width:600px){.bottom-controls{position:static;margin-top:2rem;padding-left:4px;flex-direction:row;align-items:flex-start}}
+  .bc-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
+  .bc-btn:hover{color:var(--text-2);border-color:var(--border-2)}
+  .bc-popup{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:12px 14px;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1);min-width:180px}
+  .bc-wrap{position:relative}
+  .bc-wrap:hover .bc-popup{opacity:1;transform:translateY(0);pointer-events:auto}
+  .bc-popup-label{color:var(--text-3);display:block;font-size:10px;font-family:var(--mono);letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
+  .bc-popup p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
+  .bc-popup .info-text{font-family:var(--sans);font-size:12px;color:var(--text-2);line-height:1.6;white-space:normal;max-width:240px}
   @media(hover:none){
-    .credits-wrap:hover .credits-box{opacity:0;pointer-events:none}
-    .credits-box.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
+    .bc-wrap:hover .bc-popup{opacity:0;pointer-events:none}
+    .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
   }
 </style>
 </head>
@@ -160,26 +178,16 @@
         <div class="option-info"><div class="option-name">Double Encode</div><div class="option-desc">Encode the result again</div></div>
       </div>
     </div>
-    <!-- encode ambig chip: teal when correcting, amber when off -->
-    <div class="ac-wrap" id="acw-encode">
-      <div class="ac" id="ac-encode">
-        <div class="ac-left">
-          <i class="ti ti-adjustments-horizontal ac-icon" aria-hidden="true"></i>
-          <div class="ac-text">Ambiguous word correction<span class="ac-sub" id="ac-sub-encode"></span></div>
-        </div>
-        <div class="yn">
-          <button class="yn-btn active" id="yn-enc-y" onclick="setAmbig('encode',true)">YES</button>
-          <div class="yn-sep"></div>
-          <button class="yn-btn" id="yn-enc-n" onclick="setAmbig('encode',false)">NO</button>
-        </div>
-      </div>
-    </div>
+    <!-- kept for JS compat, hidden via CSS -->
+    <div class="ac-wrap" id="acw-encode"><div class="ac" id="ac-encode"><span class="ac-sub" id="ac-sub-encode"></span></div></div>
     <div class="output-card">
       <div class="copy-toast" id="toast-encode"><div class="copy-toast-dot"></div>Copied!</div>
       <button class="copy-btn" id="cbtn-encode" onclick="doCopy('encode-result','cbtn-encode','toast-encode')" aria-label="Copy">
         <div class="cb-iw"><i class="ti ti-copy ic" aria-hidden="true"></i><i class="ti ti-check ik" aria-hidden="true"></i></div>
       </button>
-      <div class="output-label">encoded output</div>
+      <div class="output-label-row">
+        <span class="output-label">encoded output</span>
+      </div>
       <div class="output-text" id="encode-result">—</div>
       <div class="output-steps" id="encode-steps" style="display:none"></div>
     </div>
@@ -207,26 +215,22 @@
         <div class="option-info"><div class="option-name">Was Double Encoded</div><div class="option-desc">Decode twice</div></div>
       </div>
     </div>
-    <!-- decode ambig chip: always amber (warning only) -->
-    <div class="ac-wrap" id="acw-decode">
-      <div class="ac warn" id="ac-decode">
-        <div class="ac-left">
-          <i class="ti ti-alert-triangle ac-icon" aria-hidden="true"></i>
-          <div class="ac-text">Ambiguous input detected<span class="ac-sub" id="ac-sub-decode"></span></div>
-        </div>
-        <div class="yn">
-          <button class="yn-btn active" id="yn-dec-y" onclick="setAmbig('decode',true)">YES</button>
-          <div class="yn-sep"></div>
-          <button class="yn-btn" id="yn-dec-n" onclick="setAmbig('decode',false)">NO</button>
-        </div>
-      </div>
-    </div>
+    <div class="decode-disclaimer" style="display:none"></div>
     <div class="output-card">
       <div class="copy-toast" id="toast-decode"><div class="copy-toast-dot"></div>Copied!</div>
       <button class="copy-btn" id="cbtn-decode" onclick="doCopy('decode-result','cbtn-decode','toast-decode')" aria-label="Copy">
         <div class="cb-iw"><i class="ti ti-copy ic" aria-hidden="true"></i><i class="ti ti-check ik" aria-hidden="true"></i></div>
       </button>
-      <div class="output-label">decoded output</div>
+      <div class="output-label-row">
+        <span class="output-label">decoded output</span>
+        <span class="ambig-icon warn" id="dec-ambig-icon" style="display:none" onclick="this.classList.toggle('open')">
+          <i class="ti ti-alert-circle" aria-hidden="true"></i>
+          <div class="ambig-tip">
+            <div class="ambig-tip-title">Accuracy warning</div>
+            <div class="ambig-tip-disc">The decoder may not perfectly recover the original message. Some letter combinations can produce ambiguous results — treat decoded output as approximate.</div>
+          </div>
+        </span>
+      </div>
       <div class="output-text" id="decode-result">—</div>
       <div class="output-steps" id="decode-steps" style="display:none"></div>
     </div>
@@ -241,10 +245,10 @@
     </div>
     <div class="divider"></div>
     <div class="ref-text">
-      <div><span>Default       :</span> Each letter → left neighbor (edge letters → right)</div>
-      <div><span>Edge keys     :</span> A→S &nbsp; Z→X &nbsp; Q→W</div>
-      <div><span>Collision pairs :</span> (Q,E)→W &nbsp; (A,D)→S &nbsp; (Z,C)→X</div>
-      <div><span>Ambig rule    :</span> Two DIFFERENT collision-pair members adjacent → second uses alt</div>
+      <div><span>Default       :</span> Each letter → left neighbor</div>
+      <div><span>Right group   :</span> Q, A, Z, E, D, C → always right neighbor</div>
+      <div><span>Left group    :</span> R, F, V → always left neighbor</div>
+      <div><span>Numbers rule  :</span> Q and E use standard behavior when Number Row is ON</div>
       <div><span>Numbers       :</span> Q=1 W=2 E=3 R=4 T=5 Y=6 U=7 I=8 O=9 P=0</div>
     </div>
     <div class="divider"></div>
@@ -252,13 +256,22 @@
     <div id="ref-info"></div>
   </div>
 
-  <div class="credits-wrap">
-    <div class="credits-box" id="credits-box">
-      <span>credits</span>
-      <p>lumenhv</p>
-      <p>SeanEncrypted</p>
+  <div class="bottom-controls">
+    <div class="bc-wrap">
+      <div class="bc-popup" id="popup-credits">
+        <span class="bc-popup-label">credits</span>
+        <p>lumenhv</p>
+        <p>SeanEncrypted</p>
+      </div>
+      <button class="bc-btn" onclick="togglePopup('credits')">Credits</button>
     </div>
-    <button class="credits-btn" onclick="toggleCredits()">Credits</button>
+    <div class="bc-wrap">
+      <div class="bc-popup" id="popup-info">
+        <span class="bc-popup-label">about</span>
+        <p class="info-text">The Repositional Cipher is a keyboard-based substitution cipher. Q, A, Z, E, D, C always shift to their right neighbor; R, F, V always shift to their left neighbor; all other letters shift left. The cipher is fully reversible with no collisions. Includes optional reverse, mixed-direction, number row, and double-encode modes.</p>
+      </div>
+      <button class="bc-btn" onclick="togglePopup('info')">Info</button>
+    </div>
   </div>
 </div>
 
@@ -272,23 +285,19 @@ ROWS.forEach(row=>row.forEach((k,i)=>{if(i>0)LN[k]=row[i-1];if(i<row.length-1)RN
 const NUM={Q:'1',W:'2',E:'3',R:'4',T:'5',Y:'6',U:'7',I:'8',O:'9',P:'0'};
 const NUM_R={};Object.entries(NUM).forEach(([k,v])=>NUM_R[v]=k);
 
-// ── Collision pairs ───────────────────────────────────────────
-// Three pairs of DIFFERENT letters that both encode to the same output:
-//   (Q,E)→W   (A,D)→S   (Z,C)→X
-const GROUPS=[['Q','E'],['A','D'],['Z','C']];
+// ── Cipher rule (bijective, no collisions) ────────────────────
+// Q, A, Z  → always right neighbor (W, S, X)
+// E, D, C  → always right neighbor (R, F, V)
+// R, F, V  → always left neighbor  (E, D, C)
+// All other keys → left neighbor (standard)
+// Number rule exception: Q and E use standard behavior (digit output) when numbers ON
 
-// True only when a and b are DIFFERENT members of the same collision pair.
-// Same letter (DD, EE, CC) returns false — no ambiguity in a repeated letter.
-function diffGroupMembers(a,b){
-  const au=a.toUpperCase(),bu=b.toUpperCase();
-  if(au===bu)return false;
-  return GROUPS.some(g=>g.includes(au)&&g.includes(bu));
-}
+// Keys forced RIGHT (ignoring goLeft)
+const FORCE_RIGHT={Q:true, A:true, Z:true, E:true, D:true, C:true};
+// Keys forced LEFT
+const FORCE_LEFT ={R:true, F:true, V:true};
 
-// Which collision group does this letter belong to? null if none.
-function groupOf(a){const au=a.toUpperCase();return GROUPS.find(g=>g.includes(au))||null;}
-
-// ── Primary/fallback neighbor ─────────────────────────────────
+// ── Neighbor helpers ──────────────────────────────────────────
 function getRaw(c,goLeft){
   const C=c.toUpperCase();let p,f;
   if(goLeft&&LN[C]){p=LN[C];f=RN[C];}
@@ -299,125 +308,141 @@ function getRaw(c,goLeft){
 }
 function mc(r,o){return o===o.toUpperCase()?r.toUpperCase():r.toLowerCase();}
 
-// ── Decode primaries (edge-key first) ─────────────────────────
-// For the three ambiguous outputs, always decode to the edge-key source first:
-//   W → Q  (Q has no left, uses right→W)
-//   S → A  (A has no left, uses right→S)
-//   X → Z  (Z has no left, uses right→X)
-const DEC_PRI={W:'Q',S:'A',X:'Z'};
-const DEC_ALT={W:'E',S:'D',X:'C'};
+// ── Decode map (inverse of encode) ───────────────────────────
+// Build at runtime from the encode map
+const ENC_MAP={};  // filled after helpers defined
+const DEC_MAP={};  // inverse
+
+// Build encode map (uppercase only; numbers exception handled in encodePassMeta)
+(function(){
+  'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
+    let out;
+    if(FORCE_RIGHT[k]) out=RN[k]||LN[k];
+    else if(FORCE_LEFT[k]) out=LN[k]||RN[k];
+    else out=LN[k]||RN[k];
+    ENC_MAP[k]=out;
+  });
+  Object.entries(ENC_MAP).forEach(([k,v])=>{
+    if(!DEC_MAP[v]) DEC_MAP[v]=k;
+  });
+})();
 
 // ── State ─────────────────────────────────────────────────────
 const STATE={
   reverse:false,mixed:false,numbers:false,double:false,
-  dreverse:false,dmixed:false,dnumbers:false,ddouble:false,
-  ambigEncode:true,ambigDecode:true
+  dreverse:false,dmixed:false,dnumbers:false,ddouble:false
 };
 
 // ── ENCODE ────────────────────────────────────────────────────
-// Ambig rule:
-//   A collision flip is triggered when the current input letter is a DIFFERENT member
-//   of the same collision pair as the previous input letter.
-//   Once a flip is triggered, it PROPAGATES: every subsequent letter that belongs to
-//   the same group also flips, until a letter outside the group is seen.
-//   Same letter repeated (DD, EE) does NOT trigger — no ambiguity there.
-function encodePassMeta(text,mixed,useAmbig){
-  let prevInput=null,wasFlipped=false,activeGroup=null;
-  let dPrevInput=null,dWasFlipped=false,dActiveGroup=null;
+function encodePassMeta(text,mixed){
   const meta=[];
+  let letterIdx=0;
   const result=text.split('').map(ch=>{
     if(!/[A-Za-z]/.test(ch)){
-      prevInput=null;wasFlipped=false;activeGroup=null;
-      dPrevInput=null;dWasFlipped=false;dActiveGroup=null;
-      meta.push({ch,out:ch,flipped:false,collision:false});
+      meta.push({ch,out:ch,bumped:false});
       return ch;
     }
-    const goLeft=mixed?(meta.filter(m=>/[A-Za-z]/.test(m.ch)).length%2===0):true;
-    const{p,f}=getRaw(ch,goLeft);
-    const myGroup=groupOf(ch);
-    let detectedCollision=false;
-    if(myGroup){
-      const ft=!!(dPrevInput&&diffGroupMembers(ch,dPrevInput));
-      const prop=!!(dWasFlipped&&dActiveGroup&&myGroup===dActiveGroup);
-      detectedCollision=(ft||prop)&&!!f;
-      dWasFlipped=detectedCollision;
-      dActiveGroup=detectedCollision?myGroup:null;
-    }else{dWasFlipped=false;dActiveGroup=null;}
-    dPrevInput=ch.toUpperCase();
-    let chosen=p,flipped=false;
-    if(useAmbig&&myGroup){
-      const firstTrigger=!!(prevInput&&diffGroupMembers(ch,prevInput));
-      const propagate=!!(wasFlipped&&activeGroup&&myGroup===activeGroup);
-      if((firstTrigger||propagate)&&f){chosen=f;flipped=true;}
+    const C=ch.toUpperCase();
+    // Number rule: Q and E just pass through to NUM when numbers ON (handled outside)
+    // Mixed direction: odd letters go right instead
+    const goRight=mixed?(letterIdx%2===1):false;
+    letterIdx++;
+
+    let outKey;
+    if(FORCE_RIGHT[C]){
+      // Q,A,Z,E,D,C always go right regardless of mixed
+      outKey=RN[C]||LN[C];
+    } else if(FORCE_LEFT[C]){
+      // R,F,V always go left regardless of mixed
+      outKey=LN[C]||RN[C];
+    } else {
+      // Standard: left by default, right if mixed flips it
+      outKey=goRight?(RN[C]||LN[C]):(LN[C]||RN[C]);
     }
-    wasFlipped=flipped;
-    activeGroup=flipped?myGroup:null;
-    prevInput=ch.toUpperCase();
-    const out=mc(chosen,ch);
-    meta.push({ch,out,flipped,collision:detectedCollision});
+
+    const out=mc(outKey,ch);
+    meta.push({ch,out,bumped:false});
     return out;
   }).join('');
   return{result,meta};
 }
 
-function encodePass(text,mixed,useAmbig){return encodePassMeta(text,mixed,useAmbig).result;}
+function encodePass(text,mixed){return encodePassMeta(text,mixed).result;}
 
-function encodeMsg(text,opts,useAmbig){
-  const{result:r1,meta}=encodePassMeta(text,opts.mixed,useAmbig);
+function encodeMsg(text,opts){
+  const{result:r1,meta}=encodePassMeta(text,opts.mixed);
   let result=r1;
+  if(opts.double)result=encodePass(result,opts.mixed);
   if(opts.numbers)result=applyNum(result);
-  if(opts.double){result=encodePass(result,opts.mixed,useAmbig);if(opts.numbers)result=applyNum(result);}
   if(opts.reverse)result=result.split('').reverse().join('');
   return{result,meta};
 }
 
+
 // ── DECODE ────────────────────────────────────────────────────
-// For ambiguous outputs (W, S, X) use edge-key as primary source.
-// The notification fires whenever the input contains W, S, or X — those are the only
-// outputs with two possible sources, so any such char is inherently ambiguous.
-// The YES/NO toggle switches between edge-key primary (YES) and the other group member (NO).
-function decodePassMeta(text,mixed,useAmbig){
-  let li=0;
+// Since the cipher is fully bijective, decoding is just the inverse map.
+// DEC_MAP is the exact inverse of ENC_MAP (built above).
+
+// Map: ambig detection removed — decoder shows a static inaccuracy warning instead.
+const BUMP_DETECT={
+  Q:{out:'R',key:'E'},
+  A:{out:'F',key:'D'},
+  Z:{out:'V',key:'C'}
+};
+
+function decodePassMeta(text,mixed){
   const meta=[];
+  let letterIdx=0;
   const result=text.split('').map(ch=>{
-    if(!/[A-Za-z]/.test(ch)){meta.push({ch,out:ch,ambig:false});return ch;}
-    const C=ch.toUpperCase();
-    const isAmbigChar=!!(DEC_PRI[C]); // W, S, or X — always detected regardless of toggle
-    let out;
-    if(isAmbigChar){
-      // useAmbig YES → edge-key primary (Q/A/Z), NO → other member (E/D/C)
-      const src=useAmbig?DEC_PRI[C]:DEC_ALT[C];
-      out=mc(src,ch);
-    }else{
-      const goLeft=mixed?(li%2===0):true;
-      let found=null;
-      'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
-        const{p}=getRaw(k,goLeft);
-        if(p===C)found=k;
-      });
-      out=found?mc(found,ch):ch;
+    if(!/[A-Za-z]/.test(ch)){
+      meta.push({ch,out:ch,ambig:false});
+      return ch;
     }
-    meta.push({ch,out,ambig:isAmbigChar}); // ambig flag always set, independent of toggle
-    li++;
+    const C=ch.toUpperCase();
+    const goRight=mixed?(letterIdx%2===1):false;
+    letterIdx++;
+
+    // For standard (non-mixed) decode, use the static inverse map
+    let found;
+    if(!mixed){
+      found=DEC_MAP[C]||C;
+    } else {
+      // Mixed: reverse the mixed encoding logic
+      // FORCE_RIGHT and FORCE_LEFT keys are still directionally fixed
+      // For mixed standard keys, flip direction
+      if(FORCE_RIGHT[C]||FORCE_LEFT[C]){
+        found=DEC_MAP[C]||C;
+      } else {
+        // goRight encoded → output was RN[src], so src has RN[src]=C
+        // goLeft encoded → output was LN[src], so src has LN[src]=C
+        let src=null;
+        'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
+          if(FORCE_RIGHT[k]||FORCE_LEFT[k])return;
+          const out=goRight?(RN[k]||LN[k]):(LN[k]||RN[k]);
+          if(out===C)src=k;
+        });
+        found=src||C;
+      }
+    }
+
+    const out=mc(found,ch);
+    meta.push({ch,out,ambig:false});
     return out;
   }).join('');
   return{result,meta};
 }
 
-function decodePass(text,mixed,useAmbig){return decodePassMeta(text,mixed,useAmbig).result;}
+function decodePass(text,mixed){return decodePassMeta(text,mixed).result;}
 
-function decodeMsg(text,opts,useAmbig){
+function decodeMsg(text,opts){
   let work=text;
   if(opts.dreverse)work=work.split('').reverse().join('');
-  if(opts.ddouble){
-    if(opts.dnumbers)work=revNum(work);
-    work=decodePass(work,opts.dmixed,useAmbig);
-  }
   if(opts.dnumbers)work=revNum(work);
-  return decodePassMeta(work,opts.dmixed,useAmbig);
+  if(opts.ddouble)work=decodePass(work,opts.dmixed);
+  return decodePassMeta(work,opts.dmixed);
 }
 
-// ── Utilities ─────────────────────────────────────────────────
+
 function applyNum(t){return t.split('').map(c=>NUM[c.toUpperCase()]||c).join('');}
 function revNum(t){return t.split('').map(c=>NUM_R[c]||c).join('');}
 
@@ -432,14 +457,9 @@ function buildSteps(input,encoded,meta,mode){
     const out=outChars[i]||'?';
     const delay=(li*0.04).toFixed(2);
     let badge='';
-    if(mode==='encode'&&m){
-      if(m.flipped)
-        badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--teal-bg);color:var(--teal);margin-left:5px;font-family:var(--sans)">corrected</span>`;
-      else if(m.collision)
-        badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--amber-bg);color:var(--amber);margin-left:5px;font-family:var(--sans)">no alt</span>`;
-    }
-    if(mode==='decode'&&m&&m.ambig)
-      badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--amber-bg);color:var(--amber);margin-left:5px;font-family:var(--sans)">ambiguous</span>`;
+    if(mode==='encode'&&m&&m.bumped)
+      badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--teal-bg);color:var(--teal);margin-left:5px;font-family:var(--sans)">bumped</span>`;
+
     html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${chars[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${badge}</div>`;
     li++;
   }
@@ -452,74 +472,34 @@ function buildSteps(input,encoded,meta,mode){
 function liveEncode(){
   const input=document.getElementById('encode-input').value;
   const rEl=document.getElementById('encode-result'),sEl=document.getElementById('encode-steps');
-  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';showChip('encode',false);return;}
+  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';return;}
   const opts={reverse:STATE.reverse,mixed:STATE.mixed,numbers:STATE.numbers,double:STATE.double};
-  const{result,meta}=encodeMsg(input,opts,STATE.ambigEncode);
+  const{result,meta}=encodeMsg(input,opts);
   rEl.textContent=result;
   sEl.innerHTML=buildSteps(input,result,meta,'encode');
   sEl.style.display='block';
-
-  // Chip stays visible as long as collisions exist, regardless of YES/NO state
-  const collisions=meta.filter(m=>m.collision);
-  if(!collisions.length){showChip('encode',false);return;}
-  showChip('encode',true);
-  const chip=document.getElementById('ac-encode'),sub=document.getElementById('ac-sub-encode');
-  const corrected=meta.filter(m=>m.flipped).length;
-  const noAlt=meta.filter(m=>m.collision&&!m.flipped).length;
-  if(STATE.ambigEncode){
-    chip.classList.remove('warn');
-    sub.textContent=`${corrected} collision${corrected!==1?'s':''} auto-corrected`+(noAlt?` · ${noAlt} unavoidable`:'');
-  }else{
-    chip.classList.add('warn');
-    sub.textContent=`${collisions.length} ambiguous pair${collisions.length!==1?'s':''} detected — correction is off`;
-  }
 }
 
 // ── Live decode ───────────────────────────────────────────────
 function liveDecode(){
   const input=document.getElementById('decode-input').value;
   const rEl=document.getElementById('decode-result'),sEl=document.getElementById('decode-steps');
-  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';showChip('decode',false);return;}
+  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';setDecIcon(false);return;}
   const opts={dreverse:STATE.dreverse,dmixed:STATE.dmixed,dnumbers:STATE.dnumbers,ddouble:STATE.ddouble};
-  const{result,meta}=decodeMsg(input,opts,STATE.ambigDecode);
+  const{result,meta}=decodeMsg(input,opts);
   rEl.textContent=result;
   sEl.innerHTML=buildSteps(input,result,meta,'decode');
   sEl.style.display='block';
-
-  // Chip stays visible as long as ambig chars exist, regardless of YES/NO state
-  const ambigChars=meta.filter(m=>m.ambig);
-  if(!ambigChars.length){showChip('decode',false);return;}
-  showChip('decode',true);
-  const chip=document.getElementById('ac-decode'),sub=document.getElementById('ac-sub-decode');
-  const count=ambigChars.length;
-  if(STATE.ambigDecode){
-    chip.classList.remove('warn');
-    sub.textContent=`${count} letter${count!==1?'s':''} (W/S/X) detected using edge-key source (Q/A/Z)`;
-  }else{
-    chip.classList.add('warn');
-    sub.textContent=`${count} letter${count!==1?'s':''} (W/S/X) detected using alt source (E/D/C)`;
-  }
+  // Static warning: decoder may not be perfectly accurate
+  setDecIcon(true);
 }
 
-// ── Chip ──────────────────────────────────────────────────────
-function showChip(panel,show){
-  document.getElementById('acw-'+panel).classList.toggle('visible',show);
+// ── Icon helpers ──────────────────────────────────────────────
+function setDecIcon(show){
+  const icon=document.getElementById('dec-ambig-icon');
+  icon.style.display=show?'':'none';
 }
-
-// ── Ambig YES/NO ──────────────────────────────────────────────
-function setAmbig(panel,val){
-  if(panel==='encode'){
-    STATE.ambigEncode=val;
-    document.getElementById('yn-enc-y').classList.toggle('active',val);
-    document.getElementById('yn-enc-n').classList.toggle('active',!val);
-    liveEncode();
-  }else{
-    STATE.ambigDecode=val;
-    document.getElementById('yn-dec-y').classList.toggle('active',val);
-    document.getElementById('yn-dec-n').classList.toggle('active',!val);
-    liveDecode();
-  }
-}
+function showChip(panel,show){}
 
 // ── Option toggles ────────────────────────────────────────────
 function toggleOpt(id){
@@ -555,15 +535,14 @@ function buildKeyboard(){
       el.className='key';el.textContent=k;el.dataset.key=k;
       el.addEventListener('mouseenter',()=>{
         document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
-        const{p:enc}=getRaw(k,true);
+        const enc=ENC_MAP[k]||k;
         document.querySelectorAll('.key').forEach(e=>{
           if(e.dataset.key===k)e.classList.add('hl-from');
           if(e.dataset.key===enc)e.classList.add('hl-to');
         });
         const numI=NUM[k]?` · number: ${k}=${NUM[k]}`:'';
-        const grp=GROUPS.find(g=>g.includes(k));
-        const grpI=grp?` · collision pair: [${grp.join(',')}]`:'';
-        document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${grpI}`;
+        const ruleI=FORCE_RIGHT[k]?' · forced right':FORCE_LEFT[k]?' · forced left':' · standard left';
+        document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${ruleI}`;
       });
       el.addEventListener('mouseleave',()=>{
         document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
@@ -575,13 +554,15 @@ function buildKeyboard(){
 }
 buildKeyboard();
 
-function toggleCredits(){
-  var b=document.getElementById('credits-box');
-  b.classList.toggle('open');
+function togglePopup(id){
+  var b=document.getElementById('popup-'+id);
+  var wasOpen=b.classList.contains('open');
+  document.querySelectorAll('.bc-popup').forEach(function(p){p.classList.remove('open');});
+  if(!wasOpen)b.classList.toggle('open');
 }
 document.addEventListener('click',function(e){
-  var w=e.target.closest('.credits-wrap');
-  if(!w)document.getElementById('credits-box').classList.remove('open');
+  if(!e.target.closest('.bottom-controls'))
+    document.querySelectorAll('.bc-popup').forEach(function(p){p.classList.remove('open');});
 });
 </script>
 </body>
