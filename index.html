@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 
 <link rel="icon" type="image/x-icon" href="repcipher.ico">
@@ -13,83 +13,131 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  :root{
+  :root,[data-theme="light"]{
     --bg:#fff;--bg-2:#f5f5f3;--bg-3:#ededea;
     --text:#1a1a18;--text-2:#6b6b67;--text-3:#a0a09c;
     --border:rgba(0,0,0,.12);--border-2:rgba(0,0,0,.22);--border-3:rgba(0,0,0,.35);
     --teal:#1D9E75;--teal-bg:#E1F5EE;--teal-bd:#9FE1CB;
-    --amber:#BA7517;--amber-bg:#FAEEDA;--amber-bd:#FAC775;
+    --hl-from-bg:#C8EBDC;--hl-from-fg:#0A4D38;--hl-from-bd:#7BC9A8;
+    --hl-to-bg:#D8D4F5;--hl-to-fg:#3A3278;--hl-to-bd:#A89EE0;
+    --hl-edge-bg:#FAEEDA;--hl-edge-fg:#7A5510;--hl-edge-bd:#E8C87A;
     --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
-    --r:8px;--rl:12px
+    --r:8px;--rl:12px;--shadow:0 8px 32px rgba(0,0,0,.12)
   }
-  @media(prefers-color-scheme:dark){:root{
+  [data-theme="dark"]{
     --bg:#1a1a18;--bg-2:#242422;--bg-3:#2e2e2c;
     --text:#f0f0ec;--text-2:#9a9a96;--text-3:#606060;
     --border:rgba(255,255,255,.1);--border-2:rgba(255,255,255,.18);--border-3:rgba(255,255,255,.28);
     --teal:#5DCAA5;--teal-bg:#04342C;--teal-bd:#0F6E56;
-    --amber:#EF9F27;--amber-bg:#412402;--amber-bd:#854F0B
-  }}
-  body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem 4rem}
+    --hl-from-bg:#0F6E56;--hl-from-fg:#B8F0DC;--hl-from-bd:#1D9E75;
+    --hl-to-bg:#3D3580;--hl-to-fg:#D4D0FA;--hl-to-bd:#6B5FC7;
+    --hl-edge-bg:#5C3D0A;--hl-edge-fg:#F5C76A;--hl-edge-bd:#A67B1A;
+    --shadow:0 8px 32px rgba(0,0,0,.45)
+  }
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem 5rem;transition:background .25s,color .25s}
   .wrap{width:100%;max-width:680px}
-  .rc-header{display:flex;align-items:baseline;gap:12px;margin-bottom:2rem;padding-top:1rem}
+  .rc-header{display:flex;align-items:baseline;gap:12px;margin-bottom:2rem;padding-top:1rem;flex-wrap:wrap}
   .rc-title{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:-.5px}
   .rc-subtitle{font-size:13px;color:var(--text-2)}
-  .tab-bar{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:.5px solid var(--border)}
-  .tab-btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.5px;padding:8px 18px;border:none;background:transparent;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-.5px;transition:color .15s;border-radius:0}
+  .tab-bar{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:.5px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab-btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.5px;padding:8px 18px;border:none;background:transparent;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-.5px;transition:color .15s;border-radius:0;white-space:nowrap;flex-shrink:0}
   .tab-btn.active{color:var(--text);border-bottom:2px solid var(--text)}
   .tab-btn:hover{color:var(--text)}
   .panel{display:none}.panel.active{display:block}
   .input-label{font-size:11px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;display:block}
   .input-area{position:relative;margin-bottom:1rem}
-  .input-area textarea{font-family:var(--mono);font-size:15px;width:100%;min-height:80px;padding:12px 14px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg);color:var(--text);resize:vertical;outline:none;transition:border-color .15s;line-height:1.6}
-  .input-area textarea:focus{border-color:var(--border-3);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+  .input-area textarea{font-family:var(--mono);font-size:15px;width:100%;min-height:80px;padding:12px 14px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg);color:var(--text);resize:vertical;outline:none;transition:border-color .15s,box-shadow .15s;line-height:1.6}
+  .input-area textarea:focus{border-color:var(--border-3);box-shadow:0 0 0 3px var(--hl-from-bg)}
   .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
-  .option-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:.5px solid var(--border);border-radius:var(--r);cursor:pointer;user-select:none;transition:border-color .15s,background .15s;background:var(--bg)}
+  .all-warn{display:none;align-items:flex-start;gap:9px;padding:10px 13px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg-2);margin-bottom:1.25rem}
+  .all-warn.visible{display:flex}
+  .all-warn i{font-size:14px;color:var(--text-3);margin-top:1px;flex-shrink:0}
+  .all-warn-text{font-size:12px;color:var(--text-2);line-height:1.55;font-family:var(--sans)}
+  .option-row{display:flex;align-items:center;gap:8px;padding:10px 10px;border:.5px solid var(--border);border-radius:var(--r);cursor:pointer;user-select:none;transition:border-color .15s,background .15s;background:var(--bg);min-height:56px}
   .option-row:hover{border-color:var(--border-2);background:var(--bg-2)}
-  .option-row.checked{border-color:var(--border-3)}
-  .option-info{flex:1}
-  .option-name{font-size:13px;font-weight:500;margin-bottom:1px}
-  .option-desc{font-size:11px;color:var(--text-2);line-height:1.4}
-  .checkbox-anim{width:20px;height:20px;flex-shrink:0}
-  .checkbox-anim svg{width:20px;height:20px;overflow:visible}
+  .option-row.checked{border-color:var(--border-3);background:var(--bg-2)}
+  .option-info{flex:1;min-width:0}
+  .option-name{font-size:12px;font-weight:500;margin-bottom:1px;line-height:1.3}
+  .option-desc{font-size:10px;color:var(--text-2);line-height:1.35}
+  .checkbox-anim{width:18px;height:18px;flex-shrink:0}
+  .checkbox-anim svg{width:18px;height:18px;overflow:visible}
   .cb-box{fill:none;stroke:var(--border-2);stroke-width:1.5;transition:stroke .2s}
   .cb-check{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:16;stroke-dashoffset:16;transition:stroke-dashoffset .3s cubic-bezier(.4,0,.2,1),stroke .2s}
   .checked .cb-box{stroke:var(--text)}.checked .cb-check{stroke-dashoffset:0}
 
-  /* ── ambig tooltip icon ── */
   .output-label-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
   .output-label-row .output-label{margin-bottom:0}
   .ambig-icon{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0;padding-bottom:10px;margin-bottom:-10px}
   .ambig-icon i{font-size:14px;color:var(--text-3);transition:color .15s;display:block}
   .ambig-icon.warn i{color:var(--text-2)}
-  .ambig-icon:hover i{opacity:.8}
   .ambig-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:10px 12px;min-width:220px;max-width:260px;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s cubic-bezier(.34,1.56,.64,1);z-index:50;white-space:normal}
   .ambig-icon:hover .ambig-tip,.ambig-icon.open .ambig-tip{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
   .ambig-tip-title{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:5px;font-family:var(--mono)}
-  .ambig-tip-sub{font-size:11px;color:var(--text-2);line-height:1.5;margin-bottom:7px;font-family:var(--mono)}
-  .ambig-tip-disc{font-size:10px;color:var(--text-3);line-height:1.4;font-style:italic;margin-bottom:8px}
-  .ambig-tip-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2);font-family:var(--mono)}
-  .yn{display:flex;align-items:center;border:.5px solid var(--border-2);border-radius:6px;overflow:hidden;flex-shrink:0}
-  .yn-btn{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border:none;cursor:pointer;background:transparent;color:var(--text-2);transition:background .2s,color .2s;letter-spacing:.3px}
-  .yn-btn.active{background:var(--teal);color:var(--bg)}
-  .yn-sep{width:.5px;background:var(--border-2);height:22px;flex-shrink:0}
-  /* hidden — kept so JS refs don't break */
+  .ambig-tip-disc{font-size:10px;color:var(--text-3);line-height:1.4;font-style:italic}
   .ac-wrap{display:none}
-  /* ── credits & info ── */
-  .bottom-controls{position:fixed;bottom:20px;left:20px;z-index:100;display:flex;gap:8px;align-items:flex-end}
-  @media(max-width:600px){.bottom-controls{position:static;margin-top:2rem;padding-left:4px;flex-direction:row;align-items:flex-start}}
-  .bc-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
-  .bc-btn:hover{color:var(--text-2);border-color:var(--border-2)}
-  .bc-popup{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:12px 14px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1);min-width:180px}
+
+  /* ── bottom controls ── */
+  .bottom-controls{position:fixed;bottom:20px;left:20px;z-index:200;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+  @media(max-width:600px){.bottom-controls{position:static;margin-top:2.5rem;padding-left:0;left:0}}
+  .bc-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:6px 12px;cursor:pointer;transition:color .15s,border-color .15s,background .15s;user-select:none}
+  .bc-btn:hover,.bc-btn.active{color:var(--text-2);border-color:var(--border-2);background:var(--bg-3)}
   .bc-wrap{position:relative}
+  .bc-popup{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:12px 14px;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1);min-width:180px;box-shadow:var(--shadow)}
   .bc-wrap:hover .bc-popup{opacity:1;transform:translateY(0);pointer-events:auto}
+  .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
   .bc-popup-label{color:var(--text-3);display:block;font-size:10px;font-family:var(--mono);letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
   .bc-popup p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
-  .bc-popup .info-text{font-family:var(--sans);font-size:12px;color:var(--text-2);line-height:1.6;white-space:normal;max-width:240px}
+  .bc-popup .info-text{font-family:var(--sans);font-size:12px;color:var(--text-2);line-height:1.6;white-space:normal;max-width:260px}
   @media(hover:none){
     .bc-wrap:hover .bc-popup{opacity:0;pointer-events:none}
-    .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
+    .bc-wrap .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
   }
+
+  /* ── settings panel ── */
+  .settings-panel{position:absolute;bottom:calc(100% + 8px);left:0;width:min(300px,calc(100vw - 40px));background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--rl);padding:14px 14px 36px;pointer-events:none;opacity:0;transform:translateY(8px) scale(.98);transition:opacity .22s,transform .22s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--shadow);z-index:210}
+  .settings-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  @media(max-width:600px){
+    .settings-panel{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-height:min(420px,85vh);overflow-y:auto}
+    .settings-panel.open{transform:translateY(0) scale(1)}
+  }
+  .settings-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border:none;background:var(--bg-2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s}
+  .settings-close:hover{background:var(--bg-3)}
+  .settings-close:active{transform:scale(.92)}
+  .settings-close .x-line{position:absolute;width:14px;height:1.5px;background:var(--text-2);border-radius:1px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .2s,opacity .2s}
+  .settings-close .x-line:nth-child(1){transform:rotate(0deg)}
+  .settings-close .x-line:nth-child(2){transform:rotate(90deg);opacity:.6}
+  .settings-panel.open .settings-close .x-line:nth-child(1){transform:rotate(45deg)}
+  .settings-panel.open .settings-close .x-line:nth-child(2){transform:rotate(-45deg);opacity:1}
+  .settings-close:hover .x-line{background:var(--text)}
+  .settings-head{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:12px;padding-right:32px}
+  .settings-tabs{display:flex;gap:4px;margin-bottom:12px;border-bottom:.5px solid var(--border);padding-bottom:0}
+  .st-tab{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.4px;padding:6px 10px;border:none;background:transparent;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-.5px;transition:color .15s}
+  .st-tab.active{color:var(--text);border-bottom-color:var(--text)}
+  .st-tab:hover{color:var(--text-2)}
+  .stab-panel{display:none}.stab-panel.active{display:block}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:.5px solid var(--border)}
+  .setting-row:last-child{border-bottom:none}
+  .setting-label{font-size:13px;font-weight:500;color:var(--text)}
+  .setting-hint{font-size:10px;color:var(--text-3);margin-top:2px}
+  .theme-toggle{position:relative;width:54px;height:30px;border:none;background:var(--bg-3);border-radius:999px;cursor:pointer;padding:0;flex-shrink:0;border:.5px solid var(--border-2);transition:background .3s}
+  .theme-toggle .theme-track{display:block;width:100%;height:100%;border-radius:999px;position:relative}
+  .theme-toggle .theme-thumb{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;transition:left .35s cubic-bezier(.34,1.56,.64,1),right .35s cubic-bezier(.34,1.56,.64,1),background .3s}
+  .theme-toggle.dark .theme-thumb{left:auto;right:3px}
+  .theme-icon{position:absolute;top:50%;left:50%;margin:-6px 0 0 -6px;font-size:12px;width:12px;height:12px;display:flex;align-items:center;justify-content:center;transition:opacity .25s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+  .theme-icon.sun{color:#e8a317;opacity:1;transform:rotate(0deg) scale(1)}
+  .theme-icon.moon{color:#8b9dc3;opacity:0;transform:rotate(-40deg) scale(.4)}
+  .theme-toggle.dark .theme-icon.sun{opacity:0;transform:rotate(40deg) scale(.4)}
+  .theme-toggle.dark .theme-icon.moon{opacity:1;transform:rotate(0deg) scale(1)}
+  .console-unlock-btn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.3px;padding:5px 10px;border:.5px solid var(--border-2);border-radius:6px;background:var(--bg-2);color:var(--text-2);cursor:pointer;transition:background .15s,color .15s}
+  .console-unlock-btn:hover{background:var(--bg-3);color:var(--text)}
+  .console-pw-wrap{display:flex;gap:6px;margin-top:8px}
+  .console-pw-wrap input{flex:1;font-family:var(--mono);font-size:12px;padding:7px 10px;border:.5px solid var(--border-2);border-radius:6px;background:var(--bg);color:var(--text);outline:none;min-width:0}
+  .console-pw-wrap input:focus{border-color:var(--border-3)}
+  .console-pw-wrap button{font-family:var(--mono);font-size:10px;font-weight:700;padding:7px 12px;border:none;border-radius:6px;background:var(--text);color:var(--bg);cursor:pointer}
+  .console-pw-err{font-size:10px;color:#c44;margin-top:6px;font-family:var(--mono);display:none}
+  .console-pw-err.show{display:block}
+  .wip{font-family:var(--mono);font-size:13px;color:var(--text-2);text-align:center;padding:24px 8px;letter-spacing:.3px}
+  .settings-version{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.3px}
 
   /* ── output card ── */
   .output-card{background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:14px 16px;min-height:52px;position:relative}
@@ -99,7 +147,6 @@
   .step-row{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--text-2);margin-bottom:3px;opacity:0;transform:translateY(4px);animation:stepIn .2s forwards}
   @keyframes stepIn{to{opacity:1;transform:none}}
 
-  /* ── copy btn ── */
   .copy-btn{position:absolute;top:10px;right:10px;width:32px;height:32px;border:.5px solid var(--border-2);border-radius:var(--r);background:var(--bg);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s,transform .15s}
   .copy-btn:hover{border-color:var(--border-3);color:var(--text)}
   .copy-btn:active{transform:scale(.9)}
@@ -115,36 +162,44 @@
   .copy-toast-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
 
   /* ── keyboard ── */
-  .kbd-viz{margin:1rem 0 1.25rem;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
-  .kbd-row{display:flex;gap:4px}
-  .key{font-family:var(--mono);font-size:11px;font-weight:700;width:34px;height:32px;display:flex;align-items:center;justify-content:center;border:.5px solid var(--border-2);border-radius:4px;background:var(--bg-2);color:var(--text-2);cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .15s}
+  .kbd-shell{margin:1rem 0 1.25rem;background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--rl);padding:18px 14px 16px;overflow:visible}
+  .kbd-scroll{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding:4px 2px 6px;display:flex;justify-content:center}
+  .kbd-viz{display:flex;flex-direction:column;gap:7px;align-items:flex-start;width:max-content;padding:2px 4px}
+  #tab-ref.panel.active{overflow:visible}
+  .kbd-row{display:flex;gap:5px;flex-shrink:0}
+  .kbd-row:nth-child(1){padding-left:0}
+  .kbd-row:nth-child(2){padding-left:16px}
+  .kbd-row:nth-child(3){padding-left:32px}
+  .key{font-family:var(--mono);font-size:12px;font-weight:700;min-width:36px;height:36px;padding:0 2px;display:flex;align-items:center;justify-content:center;border:.5px solid var(--border-2);border-radius:6px;background:var(--bg);color:var(--text-2);cursor:pointer;flex-shrink:0;transition:background .2s,color .2s,border-color .2s,box-shadow .2s;touch-action:manipulation;position:relative}
   .key:hover{background:var(--bg-3);color:var(--text)}
-  .key.hl-from{background:#04342C;color:#9FE1CB;border-color:#0F6E56;transform:scale(1.12);z-index:2}
-  .key.hl-to{background:#26215C;color:#CECBF6;border-color:#534AB7;transform:scale(1.08);z-index:2}
+  .key.key-edge{background:var(--hl-edge-bg);color:var(--hl-edge-fg);border-color:var(--hl-edge-bd)}
+  .key.hl-from{background:var(--hl-from-bg);color:var(--hl-from-fg);border-color:var(--hl-from-bd);box-shadow:0 0 0 2px var(--hl-from-bd);z-index:2}
+  .key.hl-to{background:var(--hl-to-bg);color:var(--hl-to-fg);border-color:var(--hl-to-bd);box-shadow:0 0 0 2px var(--hl-to-bd);z-index:2}
+  .ref-legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:10px;font-size:11px;font-family:var(--mono);color:var(--text-2)}
+  .ref-legend span{display:inline-flex;align-items:center;gap:5px}
+  .ref-swatch{width:12px;height:12px;border-radius:3px;border:.5px solid var(--border-2);flex-shrink:0}
   .divider{height:.5px;background:var(--border);margin:1.25rem 0}
-  .ref-text{font-size:13px;color:var(--text-2);line-height:1.9;font-family:var(--mono)}
-  .ref-text span{color:var(--text)}
+  .ref-text{font-size:12px;color:var(--text-2);line-height:1.85;font-family:var(--mono)}
+  .ref-text span{color:var(--text);font-weight:500}
   #ref-info{font-family:var(--mono);font-size:13px;color:var(--text-2);min-height:20px;margin-top:6px}
-  @media(max-width:480px){.options-grid{grid-template-columns:1fr}.rc-title{font-size:16px}.key{width:28px;height:26px;font-size:10px}}
-
-  /* ── credits & info ── */
-  .bottom-controls{position:fixed;bottom:20px;left:20px;z-index:100;display:flex;gap:8px;align-items:flex-end}
-  @media(max-width:600px){.bottom-controls{position:static;margin-top:2rem;padding-left:4px;flex-direction:row;align-items:flex-start}}
-  .bc-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);background:var(--bg-2);border:.5px solid var(--border);border-radius:var(--r);padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s;user-select:none}
-  .bc-btn:hover{color:var(--text-2);border-color:var(--border-2)}
-  .bc-popup{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg);border:.5px solid var(--border-2);border-radius:var(--r);padding:12px 14px;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s cubic-bezier(.34,1.56,.64,1);min-width:180px}
-  .bc-wrap{position:relative}
-  .bc-wrap:hover .bc-popup{opacity:1;transform:translateY(0);pointer-events:auto}
-  .bc-popup-label{color:var(--text-3);display:block;font-size:10px;font-family:var(--mono);letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
-  .bc-popup p{font-family:var(--mono);font-size:11px;color:var(--text-2);line-height:1.7}
-  .bc-popup .info-text{font-family:var(--sans);font-size:12px;color:var(--text-2);line-height:1.6;white-space:normal;max-width:240px}
-  @media(hover:none){
-    .bc-wrap:hover .bc-popup{opacity:0;pointer-events:none}
-    .bc-popup.open{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important}
+  .ref-hint{font-size:13px;font-weight:500;color:var(--text)}
+  @media(max-width:480px){
+    .rc-title{font-size:16px}
+    .option-name{font-size:11px}
+    .option-desc{font-size:9px}
+    .kbd-shell{padding:14px 10px 12px}
+    .kbd-row{gap:4px}
+    .kbd-row:nth-child(2){padding-left:12px}
+    .kbd-row:nth-child(3){padding-left:24px}
+    .key{min-width:30px;height:32px;font-size:11px;border-radius:5px}
   }
+  .settings-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:199}
+  .settings-backdrop.show{display:block}
+  @media(min-width:601px){.settings-backdrop{display:none!important}}
 </style>
 </head>
 <body>
+<div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
 <div class="wrap">
   <div class="rc-header">
     <span class="rc-title">REPOSITIONAL/CIPHER</span>
@@ -163,31 +218,32 @@
     <div class="options-grid">
       <div class="option-row" id="opt-reverse" onclick="toggleOpt('reverse')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Reverse</div><div class="option-desc">Flip the final output</div></div>
+        <div class="option-info"><div class="option-name">Reverse</div><div class="option-desc">Flip output</div></div>
       </div>
       <div class="option-row" id="opt-mixed" onclick="toggleOpt('mixed')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Mixed Direction</div><div class="option-desc">Alternate L/R neighbors</div></div>
+        <div class="option-info"><div class="option-name">Mixed</div><div class="option-desc">Alt L/R shift</div></div>
       </div>
       <div class="option-row" id="opt-numbers" onclick="toggleOpt('numbers')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Number Row</div><div class="option-desc">Top row → digits</div></div>
+        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Top row → digits</div></div>
       </div>
       <div class="option-row" id="opt-double" onclick="toggleOpt('double')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Double Encode</div><div class="option-desc">Encode the result again</div></div>
+        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">Encode twice</div></div>
       </div>
     </div>
-    <!-- kept for JS compat, hidden via CSS -->
+    <div class="all-warn" id="all-features-warn">
+      <i class="ti ti-info-circle" aria-hidden="true"></i>
+      <span class="all-warn-text">All encoding features are active. Output may be significantly harder to decode manually.</span>
+    </div>
     <div class="ac-wrap" id="acw-encode"><div class="ac" id="ac-encode"><span class="ac-sub" id="ac-sub-encode"></span></div></div>
     <div class="output-card">
       <div class="copy-toast" id="toast-encode"><div class="copy-toast-dot"></div>Copied!</div>
       <button class="copy-btn" id="cbtn-encode" onclick="doCopy('encode-result','cbtn-encode','toast-encode')" aria-label="Copy">
         <div class="cb-iw"><i class="ti ti-copy ic" aria-hidden="true"></i><i class="ti ti-check ik" aria-hidden="true"></i></div>
       </button>
-      <div class="output-label-row">
-        <span class="output-label">encoded output</span>
-      </div>
+      <div class="output-label-row"><span class="output-label">encoded output</span></div>
       <div class="output-text" id="encode-result">—</div>
       <div class="output-steps" id="encode-steps" style="display:none"></div>
     </div>
@@ -200,22 +256,21 @@
     <div class="options-grid">
       <div class="option-row" id="dopt-reverse" onclick="toggleOpt('dreverse')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Was Reversed</div><div class="option-desc">Un-reverse first</div></div>
+        <div class="option-info"><div class="option-name">Reversed</div><div class="option-desc">Un-reverse first</div></div>
       </div>
       <div class="option-row" id="dopt-mixed" onclick="toggleOpt('dmixed')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Was Mixed</div><div class="option-desc">Alternate L/R decode</div></div>
+        <div class="option-info"><div class="option-name">Was Mixed</div><div class="option-desc">Alt L/R decode</div></div>
       </div>
       <div class="option-row" id="dopt-numbers" onclick="toggleOpt('dnumbers')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Number Row</div><div class="option-desc">Digits → top row</div></div>
+        <div class="option-info"><div class="option-name">Numbers</div><div class="option-desc">Digits → letters</div></div>
       </div>
       <div class="option-row" id="dopt-double" onclick="toggleOpt('ddouble')">
         <div class="checkbox-anim"><svg viewBox="0 0 20 20"><rect class="cb-box" x="2" y="2" width="16" height="16" rx="4"/><polyline class="cb-check" points="5,10 8.5,13.5 15,7"/></svg></div>
-        <div class="option-info"><div class="option-name">Was Double Encoded</div><div class="option-desc">Decode twice</div></div>
+        <div class="option-info"><div class="option-name">Double</div><div class="option-desc">Decode twice</div></div>
       </div>
     </div>
-    <div class="decode-disclaimer" style="display:none"></div>
     <div class="output-card">
       <div class="copy-toast" id="toast-decode"><div class="copy-toast-dot"></div>Copied!</div>
       <button class="copy-btn" id="cbtn-decode" onclick="doCopy('decode-result','cbtn-decode','toast-decode')" aria-label="Copy">
@@ -227,7 +282,7 @@
           <i class="ti ti-alert-circle" aria-hidden="true"></i>
           <div class="ambig-tip">
             <div class="ambig-tip-title">Accuracy warning</div>
-            <div class="ambig-tip-disc">The decoder may not perfectly recover the original message. Some letter combinations can produce ambiguous results — treat decoded output as approximate.</div>
+            <div class="ambig-tip-disc">Match decode options to how the message was encoded. Wrong flags will produce incorrect output.</div>
           </div>
         </span>
       </div>
@@ -238,21 +293,36 @@
 
   <!-- KEYBOARD REF -->
   <div id="tab-ref" class="panel">
-    <div class="kbd-viz">
-      <div class="kbd-row" id="row0"></div>
-      <div class="kbd-row" id="row1" style="margin-left:17px"></div>
-      <div class="kbd-row" id="row2" style="margin-left:34px"></div>
+    <div class="kbd-shell">
+      <div class="kbd-scroll">
+        <div class="kbd-viz">
+          <div class="kbd-row" id="row0"></div>
+          <div class="kbd-row" id="row1"></div>
+          <div class="kbd-row" id="row2"></div>
+        </div>
+      </div>
     </div>
     <div class="divider"></div>
     <div class="ref-text">
-      <div><span>Default       :</span> Each letter → left neighbor</div>
-      <div><span>Right group   :</span> Q, A, Z, E, D, C → always right neighbor</div>
-      <div><span>Left group    :</span> R, F, V → always left neighbor</div>
-      <div><span>Numbers rule  :</span> Q and E use standard behavior when Number Row is ON</div>
-      <div><span>Numbers       :</span> Q=1 W=2 E=3 R=4 T=5 Y=6 U=7 I=8 O=9 P=0</div>
+      <div><span>Encode rule   :</span> Every letter → left neighbor on its row</div>
+      <div><span>Edge wrap     :</span> Far-left keys wrap to far-right of the same row</div>
+      <div><span>Wrap keys     :</span> Q→P &nbsp;·&nbsp; A→L &nbsp;·&nbsp; Z→M</div>
+      <div><span>Top row       :</span> Q→P, W→Q, E→W, R→E … P→O</div>
+      <div><span>Home row      :</span> A→L, S→A, D→S, F→D … L→K</div>
+      <div><span>Bottom row    :</span> Z→M, X→Z, C→X, V→C … M→N</div>
+      <div><span>Decode        :</span> Shift right on each row (P→Q, L→A, M→Z at edges)</div>
+      <div><span>Example       :</span> ADD → LSS (A wraps to L; D→S; D→S)</div>
+      <div><span>Mixed mode    :</span> Odd letters shift right (with wrap) instead</div>
+      <div><span>Number row    :</span> After encode: Q=1 W=2 E=3 … P=0</div>
+      <div><span>Extras        :</span> Reverse · Double encode</div>
+    </div>
+    <div class="ref-legend">
+      <span><i class="ref-swatch" style="background:var(--hl-edge-bg);border-color:var(--hl-edge-bd)"></i> Wrap key</span>
+      <span><i class="ref-swatch" style="background:var(--hl-from-bg);border-color:var(--hl-from-bd)"></i> Source</span>
+      <span><i class="ref-swatch" style="background:var(--hl-to-bg);border-color:var(--hl-to-bd)"></i> Output</span>
     </div>
     <div class="divider"></div>
-    <div style="font-size:13px;font-weight:500;color:var(--text)">Hover a key to see its cipher mapping</div>
+    <p class="ref-hint">Tap or hover a key to see its mapping</p>
     <div id="ref-info"></div>
   </div>
 
@@ -268,9 +338,54 @@
     <div class="bc-wrap">
       <div class="bc-popup" id="popup-info">
         <span class="bc-popup-label">about</span>
-        <p class="info-text">The Repositional Cipher is a keyboard-based substitution cipher. Q, A, Z, E, D, C always shift to their right neighbor; R, F, V always shift to their left neighbor; all other letters shift left. The cipher is fully reversible with no collisions. Includes optional reverse, mixed-direction, number row, and double-encode modes.</p>
+        <p class="info-text">The Repositional Cipher shifts each letter to its left neighbor on the QWERTY row. Keys on the far left (Q, A, Z) wrap to the far right of that row. Decode by shifting right. Fully reversible — no collisions. Optional mixed, number row, reverse, and double-encode modes.</p>
       </div>
       <button class="bc-btn" onclick="togglePopup('info')">Info</button>
+    </div>
+    <div class="bc-wrap">
+      <div class="settings-panel" id="settings-panel">
+        <button class="settings-close" onclick="closeSettings()" aria-label="Close">
+          <span class="x-line"></span><span class="x-line"></span>
+        </button>
+        <div class="settings-head">options</div>
+        <div class="settings-tabs" id="settings-tabs">
+          <button type="button" class="st-tab active" data-stab="general" onclick="switchSettingsTab('general')">General</button>
+          <button type="button" class="st-tab" id="stab-console-btn" data-stab="console" onclick="switchSettingsTab('console')" style="display:none">Console</button>
+        </div>
+        <div id="stab-panel-general" class="stab-panel active">
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" id="theme-label">Light mode</div>
+              <div class="setting-hint">Toggle appearance</div>
+            </div>
+            <button type="button" class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+              <span class="theme-track">
+                <span class="theme-thumb">
+                  <i class="ti ti-sun theme-icon sun" aria-hidden="true"></i>
+                  <i class="ti ti-moon theme-icon moon" aria-hidden="true"></i>
+                </span>
+              </span>
+            </button>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Console</div>
+              <div class="setting-hint">Password required</div>
+            </div>
+            <button type="button" class="console-unlock-btn" id="console-unlock-btn" onclick="showConsolePw()">Unlock</button>
+          </div>
+          <div class="console-pw-wrap" id="console-pw-wrap" style="display:none">
+            <input type="password" id="console-pw" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')tryConsoleUnlock()" />
+            <button type="button" onclick="tryConsoleUnlock()">Go</button>
+          </div>
+          <div class="console-pw-err" id="console-pw-err">Incorrect password</div>
+        </div>
+        <div id="stab-panel-console" class="stab-panel">
+          <p class="wip">Work In Progress</p>
+        </div>
+        <div class="settings-version">v1.5</div>
+      </div>
+      <button class="bc-btn" id="btn-options" onclick="toggleSettings()">Options</button>
     </div>
   </div>
 </div>
@@ -278,90 +393,49 @@
 <script>
 // ── Keyboard layout ───────────────────────────────────────────
 const ROWS=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
-const LN={},RN={};
-ROWS.forEach(row=>row.forEach((k,i)=>{if(i>0)LN[k]=row[i-1];if(i<row.length-1)RN[k]=row[i+1];}));
+const ROW_OF={};
+const EDGE_WRAP=new Set(['Q','A','Z']); // far-left keys wrap to far-right of row
 
-// Number row
-const NUM={Q:'1',W:'2',E:'3',R:'4',T:'5',Y:'6',U:'7',I:'8',O:'9',P:'0'};
-const NUM_R={};Object.entries(NUM).forEach(([k,v])=>NUM_R[v]=k);
+ROWS.forEach(row=>row.forEach(k=>{ROW_OF[k]=row;}));
 
-// ── Cipher rule (bijective, no collisions) ────────────────────
-// Q, A, Z  → always right neighbor (W, S, X)
-// E, D, C  → always right neighbor (R, F, V)
-// R, F, V  → always left neighbor  (E, D, C)
-// All other keys → left neighbor (standard)
-// Number rule exception: Q and E use standard behavior (digit output) when numbers ON
-
-// Keys forced RIGHT (ignoring goLeft)
-const FORCE_RIGHT={Q:true, A:true, Z:true, E:true, D:true, C:true};
-// Keys forced LEFT
-const FORCE_LEFT ={R:true, F:true, V:true};
-
-// ── Neighbor helpers ──────────────────────────────────────────
-function getRaw(c,goLeft){
-  const C=c.toUpperCase();let p,f;
-  if(goLeft&&LN[C]){p=LN[C];f=RN[C];}
-  else if(!goLeft&&RN[C]){p=RN[C];f=LN[C];}
-  else if(LN[C]){p=LN[C];f=RN[C];}
-  else{p=RN[C];f=LN[C];}
-  return{p,f};
+function wrapLeft(k){
+  const row=ROW_OF[k],i=row.indexOf(k);
+  return row[(i-1+row.length)%row.length];
+}
+function wrapRight(k){
+  const row=ROW_OF[k],i=row.indexOf(k);
+  return row[(i+1)%row.length];
 }
 function mc(r,o){return o===o.toUpperCase()?r.toUpperCase():r.toLowerCase();}
 
-// ── Decode map (inverse of encode) ───────────────────────────
-// Build at runtime from the encode map
-const ENC_MAP={};  // filled after helpers defined
-const DEC_MAP={};  // inverse
+const ENC_MAP={},DEC_MAP={};
+'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
+  ENC_MAP[k]=wrapLeft(k);
+  DEC_MAP[k]=wrapRight(k);
+});
 
-// Build encode map (uppercase only; numbers exception handled in encodePassMeta)
-(function(){
-  'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
-    let out;
-    if(FORCE_RIGHT[k]) out=RN[k]||LN[k];
-    else if(FORCE_LEFT[k]) out=LN[k]||RN[k];
-    else out=LN[k]||RN[k];
-    ENC_MAP[k]=out;
-  });
-  Object.entries(ENC_MAP).forEach(([k,v])=>{
-    if(!DEC_MAP[v]) DEC_MAP[v]=k;
-  });
-})();
+const NUM={Q:'1',W:'2',E:'3',R:'4',T:'5',Y:'6',U:'7',I:'8',O:'9',P:'0'};
+const NUM_R={};Object.entries(NUM).forEach(([k,v])=>NUM_R[v]=k);
 
-// ── State ─────────────────────────────────────────────────────
 const STATE={
   reverse:false,mixed:false,numbers:false,double:false,
   dreverse:false,dmixed:false,dnumbers:false,ddouble:false
 };
 
-// ── ENCODE ────────────────────────────────────────────────────
 function encodePassMeta(text,mixed){
   const meta=[];
   let letterIdx=0;
   const result=text.split('').map(ch=>{
     if(!/[A-Za-z]/.test(ch)){
-      meta.push({ch,out:ch,bumped:false});
+      meta.push({ch,out:ch,wrap:false});
       return ch;
     }
     const C=ch.toUpperCase();
-    // Number rule: Q and E just pass through to NUM when numbers ON (handled outside)
-    // Mixed direction: odd letters go right instead
-    const goRight=mixed?(letterIdx%2===1):false;
+    const goRight=mixed&&(letterIdx%2===1);
     letterIdx++;
-
-    let outKey;
-    if(FORCE_RIGHT[C]){
-      // Q,A,Z,E,D,C always go right regardless of mixed
-      outKey=RN[C]||LN[C];
-    } else if(FORCE_LEFT[C]){
-      // R,F,V always go left regardless of mixed
-      outKey=LN[C]||RN[C];
-    } else {
-      // Standard: left by default, right if mixed flips it
-      outKey=goRight?(RN[C]||LN[C]):(LN[C]||RN[C]);
-    }
-
+    const outKey=goRight?wrapRight(C):wrapLeft(C);
     const out=mc(outKey,ch);
-    meta.push({ch,out,bumped:false});
+    meta.push({ch,out,wrap:EDGE_WRAP.has(C)&&!goRight});
     return out;
   }).join('');
   return{result,meta};
@@ -378,55 +452,20 @@ function encodeMsg(text,opts){
   return{result,meta};
 }
 
-
-// ── DECODE ────────────────────────────────────────────────────
-// Since the cipher is fully bijective, decoding is just the inverse map.
-// DEC_MAP is the exact inverse of ENC_MAP (built above).
-
-// Map: ambig detection removed — decoder shows a static inaccuracy warning instead.
-const BUMP_DETECT={
-  Q:{out:'R',key:'E'},
-  A:{out:'F',key:'D'},
-  Z:{out:'V',key:'C'}
-};
-
 function decodePassMeta(text,mixed){
   const meta=[];
   let letterIdx=0;
   const result=text.split('').map(ch=>{
     if(!/[A-Za-z]/.test(ch)){
-      meta.push({ch,out:ch,ambig:false});
+      meta.push({ch,out:ch,wrap:false});
       return ch;
     }
     const C=ch.toUpperCase();
-    const goRight=mixed?(letterIdx%2===1):false;
+    const goRight=mixed&&(letterIdx%2===1);
     letterIdx++;
-
-    // For standard (non-mixed) decode, use the static inverse map
-    let found;
-    if(!mixed){
-      found=DEC_MAP[C]||C;
-    } else {
-      // Mixed: reverse the mixed encoding logic
-      // FORCE_RIGHT and FORCE_LEFT keys are still directionally fixed
-      // For mixed standard keys, flip direction
-      if(FORCE_RIGHT[C]||FORCE_LEFT[C]){
-        found=DEC_MAP[C]||C;
-      } else {
-        // goRight encoded → output was RN[src], so src has RN[src]=C
-        // goLeft encoded → output was LN[src], so src has LN[src]=C
-        let src=null;
-        'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').forEach(k=>{
-          if(FORCE_RIGHT[k]||FORCE_LEFT[k])return;
-          const out=goRight?(RN[k]||LN[k]):(LN[k]||RN[k]);
-          if(out===C)src=k;
-        });
-        found=src||C;
-      }
-    }
-
+    const found=goRight?wrapLeft(C):wrapRight(C);
     const out=mc(found,ch);
-    meta.push({ch,out,ambig:false});
+    meta.push({ch,out,wrap:false});
     return out;
   }).join('');
   return{result,meta};
@@ -442,45 +481,44 @@ function decodeMsg(text,opts){
   return decodePassMeta(work,opts.dmixed);
 }
 
-
 function applyNum(t){return t.split('').map(c=>NUM[c.toUpperCase()]||c).join('');}
 function revNum(t){return t.split('').map(c=>NUM_R[c]||c).join('');}
 
-// ── Steps builder ─────────────────────────────────────────────
 function buildSteps(input,encoded,meta,mode){
-  let html='',li=0;
+  let html='',li=0,oi=0;
   const chars=input.split(''),outChars=encoded.split('');
   const lm=meta?meta.filter(m=>/[A-Za-z]/.test(m.ch)):[];
   for(let i=0;i<chars.length&&li<8;i++){
-    if(!/[A-Za-z]/.test(chars[i]))continue;
+    if(!/[A-Za-z]/.test(chars[i])){oi++;continue;}
     const m=lm[li]||null;
-    const out=outChars[i]||'?';
+    const out=outChars[oi]||'?';
     const delay=(li*0.04).toFixed(2);
-    let badge='';
-    if(mode==='encode'&&m&&m.bumped)
-      badge=`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--teal-bg);color:var(--teal);margin-left:5px;font-family:var(--sans)">bumped</span>`;
-
-    html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${chars[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${badge}</div>`;
-    li++;
+    const wrapBadge=m&&m.wrap?`<span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--hl-edge-bg);color:var(--hl-edge-fg);margin-left:5px;font-family:var(--sans)">wrap</span>`:'';
+    html+=`<div class="step-row" style="animation-delay:${delay}s"><span style="color:var(--text);font-weight:700">${chars[i]}</span><span style="color:var(--text-3)">→</span><span style="color:var(--text)">${out}</span>${wrapBadge}</div>`;
+    li++;oi++;
   }
   const lc=input.replace(/[^A-Za-z]/g,'').length;
   if(lc>8)html+=`<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-family:var(--mono)">+${lc-8} more</div>`;
   return html;
 }
 
-// ── Live encode ───────────────────────────────────────────────
+function checkAllWarn(){
+  const all=STATE.reverse&&STATE.mixed&&STATE.numbers&&STATE.double;
+  document.getElementById('all-features-warn').classList.toggle('visible',all);
+}
+
 function liveEncode(){
   const input=document.getElementById('encode-input').value;
   const rEl=document.getElementById('encode-result'),sEl=document.getElementById('encode-steps');
-  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';return;}
+  if(!input.trim()){rEl.textContent='—';sEl.style.display='none';checkAllWarn();return;}
   const opts={reverse:STATE.reverse,mixed:STATE.mixed,numbers:STATE.numbers,double:STATE.double};
   const{result,meta}=encodeMsg(input,opts);
   rEl.textContent=result;
   sEl.innerHTML=buildSteps(input,result,meta,'encode');
   sEl.style.display='block';
+  checkAllWarn();
 }
 
-// ── Live decode ───────────────────────────────────────────────
 function liveDecode(){
   const input=document.getElementById('decode-input').value;
   const rEl=document.getElementById('decode-result'),sEl=document.getElementById('decode-steps');
@@ -490,32 +528,30 @@ function liveDecode(){
   rEl.textContent=result;
   sEl.innerHTML=buildSteps(input,result,meta,'decode');
   sEl.style.display='block';
-  // Static warning: decoder may not be perfectly accurate
-  setDecIcon(true);
+  const needsHint=STATE.dmixed||STATE.dreverse||STATE.dnumbers||STATE.ddouble;
+  setDecIcon(needsHint);
 }
 
-// ── Icon helpers ──────────────────────────────────────────────
 function setDecIcon(show){
-  const icon=document.getElementById('dec-ambig-icon');
-  icon.style.display=show?'':'none';
+  document.getElementById('dec-ambig-icon').style.display=show?'':'none';
 }
-function showChip(panel,show){}
 
-// ── Option toggles ────────────────────────────────────────────
 function toggleOpt(id){
   STATE[id]=!STATE[id];
   const elId=id.startsWith('d')&&id!=='double'?'dopt-'+id.slice(1):'opt-'+id;
   const el=document.getElementById(elId);
   if(el)el.classList.toggle('checked',STATE[id]);
-  id.startsWith('d')&&id!=='double'?liveDecode():liveEncode();
+  id.startsWith('d')&&id!=='double'?liveDecode():(liveEncode(),checkAllWarn());
 }
+
 function switchTab(name){
   ['encode','decode','ref'].forEach((t,i)=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===name);
-    document.querySelectorAll('.tab-btn')[i].classList.toggle('active',t===name);
+    document.querySelectorAll('.tab-bar .tab-btn')[i].classList.toggle('active',t===name);
   });
   if(name==='ref')buildKeyboard();
 }
+
 function doCopy(textId,btnId,toastId){
   const text=document.getElementById(textId).textContent;
   if(!text||text==='—')return;
@@ -526,27 +562,45 @@ function doCopy(textId,btnId,toastId){
   setTimeout(()=>{btn.classList.remove('copied');toast.classList.remove('show');btn._busy=false;},1800);
 }
 
-// ── Keyboard ──────────────────────────────────────────────────
+let activeKey=null;
+
+function showKeyInfo(k){
+  activeKey=k;
+  document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
+  const enc=ENC_MAP[k]||k;
+  document.querySelectorAll('.key').forEach(e=>{
+    if(e.dataset.key===k)e.classList.add('hl-from');
+    if(e.dataset.key===enc)e.classList.add('hl-to');
+  });
+  const numI=NUM[k]?` · number: ${k}=${NUM[k]}`:'';
+  const ruleI=EDGE_WRAP.has(k)?' · edge wrap (left → far right)':' · shift left';
+  document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${ruleI}`;
+}
+
+function clearKeyInfo(){
+  if(activeKey)return;
+  document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
+  document.getElementById('ref-info').textContent='';
+}
+
 function buildKeyboard(){
   ROWS.forEach((row,ri)=>{
-    const rowEl=document.getElementById('row'+ri);rowEl.innerHTML='';
+    const rowEl=document.getElementById('row'+ri);
+    rowEl.innerHTML='';
     row.forEach(k=>{
       const el=document.createElement('div');
-      el.className='key';el.textContent=k;el.dataset.key=k;
-      el.addEventListener('mouseenter',()=>{
-        document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
-        const enc=ENC_MAP[k]||k;
-        document.querySelectorAll('.key').forEach(e=>{
-          if(e.dataset.key===k)e.classList.add('hl-from');
-          if(e.dataset.key===enc)e.classList.add('hl-to');
-        });
-        const numI=NUM[k]?` · number: ${k}=${NUM[k]}`:'';
-        const ruleI=FORCE_RIGHT[k]?' · forced right':FORCE_LEFT[k]?' · forced left':' · standard left';
-        document.getElementById('ref-info').textContent=`${k} → ${enc}${numI}${ruleI}`;
-      });
-      el.addEventListener('mouseleave',()=>{
-        document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));
-        document.getElementById('ref-info').textContent='';
+      el.className='key'+(EDGE_WRAP.has(k)?' key-edge':'');
+      el.textContent=k;
+      el.dataset.key=k;
+      el.addEventListener('mouseenter',()=>showKeyInfo(k));
+      el.addEventListener('mouseleave',()=>{activeKey=null;clearKeyInfo();});
+      el.addEventListener('touchstart',e=>{
+        e.preventDefault();
+        activeKey=k;
+        showKeyInfo(k);
+      },{passive:false});
+      el.addEventListener('touchend',()=>{
+        setTimeout(()=>{activeKey=null;document.querySelectorAll('.key').forEach(e=>e.classList.remove('hl-from','hl-to'));document.getElementById('ref-info').textContent='';},400);
       });
       rowEl.appendChild(el);
     });
@@ -554,16 +608,111 @@ function buildKeyboard(){
 }
 buildKeyboard();
 
-function togglePopup(id){
-  var b=document.getElementById('popup-'+id);
-  var wasOpen=b.classList.contains('open');
-  document.querySelectorAll('.bc-popup').forEach(function(p){p.classList.remove('open');});
-  if(!wasOpen)b.classList.toggle('open');
+// ── Theme ─────────────────────────────────────────────────────
+const THEME_KEY='rc-theme-v15';
+const CONSOLE_KEY='rc-console-unlocked';
+
+function initTheme(){
+  const saved=localStorage.getItem(THEME_KEY);
+  const theme=saved||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  setTheme(theme,false);
 }
+
+function setTheme(theme,save){
+  document.documentElement.setAttribute('data-theme',theme);
+  const btn=document.getElementById('theme-toggle');
+  const label=document.getElementById('theme-label');
+  if(btn){
+    btn.classList.toggle('dark',theme==='dark');
+    btn.setAttribute('aria-label',theme==='dark'?'Switch to light mode':'Switch to dark mode');
+  }
+  if(label)label.textContent=theme==='dark'?'Dark mode':'Light mode';
+  if(save!==false)localStorage.setItem(THEME_KEY,theme);
+}
+
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'light';
+  setTheme(cur==='light'?'dark':'light');
+}
+
+// ── Settings panel ────────────────────────────────────────────
+function toggleSettings(){
+  const panel=document.getElementById('settings-panel');
+  const btn=document.getElementById('btn-options');
+  const backdrop=document.getElementById('settings-backdrop');
+  const open=panel.classList.contains('open');
+  closeAllPopups();
+  if(open){
+    panel.classList.remove('open');
+    btn.classList.remove('active');
+    backdrop.classList.remove('show');
+  }else{
+    panel.classList.add('open');
+    btn.classList.add('active');
+    backdrop.classList.add('show');
+  }
+}
+
+function closeSettings(){
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('btn-options').classList.remove('active');
+  document.getElementById('settings-backdrop').classList.remove('show');
+}
+
+function switchSettingsTab(name){
+  document.querySelectorAll('.st-tab').forEach(t=>t.classList.toggle('active',t.dataset.stab===name));
+  document.querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('stab-panel-'+name).classList.add('active');
+}
+
+function showConsolePw(){
+  const wrap=document.getElementById('console-pw-wrap');
+  wrap.style.display=wrap.style.display==='none'?'flex':'none';
+  document.getElementById('console-pw-err').classList.remove('show');
+  if(wrap.style.display!=='none')document.getElementById('console-pw').focus();
+}
+
+function tryConsoleUnlock(){
+  const pw=document.getElementById('console-pw').value;
+  const err=document.getElementById('console-pw-err');
+  if(pw!=='cityboy123'){
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  document.getElementById('console-pw-wrap').style.display='none';
+  document.getElementById('console-pw').value='';
+  document.getElementById('stab-console-btn').style.display='';
+  localStorage.setItem(CONSOLE_KEY,'1');
+  switchSettingsTab('console');
+}
+
+function initConsole(){
+  if(localStorage.getItem(CONSOLE_KEY)==='1'){
+    document.getElementById('stab-console-btn').style.display='';
+  }
+}
+
+function togglePopup(id){
+  const b=document.getElementById('popup-'+id);
+  const wasOpen=b.classList.contains('open');
+  closeAllPopups();
+  closeSettings();
+  if(!wasOpen)b.classList.add('open');
+}
+
+function closeAllPopups(){
+  document.querySelectorAll('.bc-popup').forEach(p=>p.classList.remove('open'));
+}
+
 document.addEventListener('click',function(e){
-  if(!e.target.closest('.bottom-controls'))
-    document.querySelectorAll('.bc-popup').forEach(function(p){p.classList.remove('open');});
+  if(!e.target.closest('.bottom-controls'))closeAllPopups();
+  if(!e.target.closest('.bc-wrap')&&!e.target.closest('#settings-panel')&&!e.target.closest('#btn-options'))
+    closeSettings();
 });
+
+initTheme();
+initConsole();
 </script>
 </body>
 </html>
